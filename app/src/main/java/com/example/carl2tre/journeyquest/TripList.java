@@ -4,6 +4,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 
 public class TripList extends ActionBarActivity {
@@ -35,5 +36,10 @@ public class TripList extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onTap(){
+        Toast.makeText(this, "Tapped", Toast.LENGTH_SHORT).show();
+
     }
 }
