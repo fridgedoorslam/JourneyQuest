@@ -1,14 +1,20 @@
 package com.example.carl2tre.journeyquest;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 
 public class TripList extends ActionBarActivity {
+    public String newTrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +47,24 @@ public class TripList extends ActionBarActivity {
 
     public void onTap(View view){
         Toast.makeText(this, "Tapped", Toast.LENGTH_SHORT).show();
+        final EditText tripName = new EditText(this);
+        AlertDialog.Builder nameBuild = new AlertDialog.Builder(this);
+        nameBuild.setTitle("Name your trip");
+        nameBuild.setMessage("Please name your trip");
+        tripName.setInputType(InputType.TYPE_CLASS_TEXT);
+        nameBuild.setView(tripName);
+        nameBuild.setPositiveButton("Start Planning Trip",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        newTrip = tripName.getText().toString();
+                        Toast.makeText(getApplicationContext(), newTrip, Toast.LENGTH_LONG).show();
+
+                    }
+                });
+
+        nameBuild.show();
+
 
     }
 }
