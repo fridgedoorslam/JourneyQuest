@@ -127,7 +127,34 @@ public class TripList extends ListActivity {
             return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        String text = item.getTitle().toString();
+
+        switch (item.getItemId()) {
+            case R.id.item0:
+                Toast.makeText(this, "You clicked on " + text, Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.item1:
+                Toast.makeText(this, "You clicked on " + text + ".\nDo Something.",
+                        Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.item2:
+                Toast.makeText(this, "You clicked on " + text + ".\nDo Something.",
+                        Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.item3:
+                Toast.makeText(this, "You clicked on " + text + ".\nDo Something.",
+                        Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.item4:
+                Toast.makeText(this, "You clicked on " + text + ".\nDo Something.",
+                        Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.action_settings:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
     }
 
     public void onTap(View view){
@@ -135,7 +162,7 @@ public class TripList extends ListActivity {
         final EditText tripName = new EditText(this);
         AlertDialog.Builder nameBuild = new AlertDialog.Builder(this);
         nameBuild.setTitle("Name your trip");
-        nameBuild.setMessage("Please name your trip");
+        //nameBuild.setMessage("Please name your trip");
         tripName.setInputType(InputType.TYPE_CLASS_TEXT);
         nameBuild.setView(tripName);
         nameBuild.setPositiveButton("Start Planning Trip",
@@ -149,14 +176,13 @@ public class TripList extends ListActivity {
                         Toast.makeText(getApplicationContext(), newTrip + "added with id" + id, Toast.LENGTH_LONG).show();
                         db.close();
                         onResume();
-
+                        Intent intent = new Intent(getApplicationContext(), TripOptions.class);
+                        startActivity(intent);
                     }
                 });
-
         nameBuild.show();
-
-
     }
+
 
 
 }
