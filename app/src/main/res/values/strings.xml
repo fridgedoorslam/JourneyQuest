@@ -14,6 +14,8 @@
     <string name="notes">Notes: </string>
     <string name="transportation_prompt">Choose your transportation: </string>
     <string name="reservation_prompt">Choose your reservation: </string>
+    <string name="cancel_button">Cancel</string>
+    <string name="submit_button">Submit</string>
     <string-array name="transportation_array">
         <item>Bus</item>
         <item>Plane</item>

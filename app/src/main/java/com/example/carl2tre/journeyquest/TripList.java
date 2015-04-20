@@ -56,7 +56,6 @@ public class TripList extends ListActivity {
                 //We need to map the position in the list to the position in the db
 
                 final long dbPosition = contacts.get(position).getId();
-                Log.d("ShowThem", "dbPosition is " + Long.toString(dbPosition));
 
                 db.open();
                 Cursor c = db.getContact(dbPosition);
@@ -64,9 +63,6 @@ public class TripList extends ListActivity {
                 Intent intent = new Intent(TripList.this, TripOptions.class);
                 startActivity(intent);
 
-                if (c != null) {
-                    Toast.makeText(getBaseContext(), "Email address: " + c.getString(c.getColumnIndex(db.KEY_EMAIL)), Toast.LENGTH_LONG).show();
-                }
                 db.close();
 
                     }
@@ -128,7 +124,6 @@ public class TripList extends ListActivity {
         final EditText tripName = new EditText(this);
         AlertDialog.Builder nameBuild = new AlertDialog.Builder(this);
         nameBuild.setTitle("Name your trip");
-        //nameBuild.setMessage("Please name your trip");
         tripName.setInputType(InputType.TYPE_CLASS_TEXT);
         nameBuild.setView(tripName);
         nameBuild.setPositiveButton("Start Planning Trip",
@@ -137,7 +132,6 @@ public class TripList extends ListActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         db.open();
                         newTrip = tripName.getText().toString();
-                        //Toast.makeText(getApplicationContext(), newTrip, Toast.LENGTH_LONG).show();
                         long id = db.insertContact(newTrip, "test");
                         Toast.makeText(getApplicationContext(), newTrip + "added with id" + id, Toast.LENGTH_LONG).show();
                         db.close();

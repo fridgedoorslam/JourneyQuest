@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 
 public class TransportationEvent extends Activity {
@@ -40,5 +41,9 @@ public class TransportationEvent extends Activity {
     @Override
     public void onBackPressed(){
 
+    }
+
+    public void onCancel(View view){
+        finish();
     }
 }
