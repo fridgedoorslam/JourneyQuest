@@ -16,6 +16,7 @@ public class DBAdapter {
     static final String KEY_ROWID = "_id";  //Give constant names to the rows
     static final String KEY_NAME = "name";
     static final String KEY_EMAIL = "email";
+
     static final String TAG = "DBAdapter";
 
     static final String DATABASE_NAME = "MyDB";

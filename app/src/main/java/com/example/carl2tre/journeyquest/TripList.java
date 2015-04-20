@@ -31,43 +31,6 @@ public class TripList extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_list);
-
-        db = new DBAdapter(this);
-        db.open();
-
-        contacts = Contact.getAll(db);
-
-        db.close();
-
-        //ArrayAdapter<Contact> adapter = new ArrayAdapter<Contact>(this, android.R.layout.simple_list_item_1, contacts);
-        ArrayAdapter<Contact> adapter = new ArrayAdapter<Contact>(this, android.R.layout.simple_list_item_checked, contacts);
-        getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
-        setListAdapter(adapter);
-        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //position is the spot on the View. It does not correspond to the position in the db.
-                //Rather, it corresponds to the position in the List<Contacts>
-                //We need to map the position in the list to the position in the db
-
-                final long dbPosition = contacts.get(position).getId();
-                Log.d("ShowThem","dbPosition is " + Long.toString(dbPosition));
-
-                db.open();
-                Cursor c = db.getContact(dbPosition);
-
-                if (c != null) {
-                    //Toast.makeText(getBaseContext(), "Email address: " + c.getString(c.getColumnIndex(db.KEY_EMAIL)), Toast.LENGTH_LONG).show();
-                }
-                db.close();
-
-                    }
-
-
-        });
-
-
     }
 
     @Override
@@ -97,6 +60,9 @@ public class TripList extends ListActivity {
 
                 db.open();
                 Cursor c = db.getContact(dbPosition);
+
+                Intent intent = new Intent(TripList.this, TripOptions.class);
+                startActivity(intent);
 
                 if (c != null) {
                     Toast.makeText(getBaseContext(), "Email address: " + c.getString(c.getColumnIndex(db.KEY_EMAIL)), Toast.LENGTH_LONG).show();
