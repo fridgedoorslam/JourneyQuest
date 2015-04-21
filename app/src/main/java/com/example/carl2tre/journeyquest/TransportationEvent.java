@@ -9,23 +9,30 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
 public class TransportationEvent extends Activity {
+    DBAdapter db;
     public EditText eventName;
     public Spinner eventTransportation;
     public EditText eventDate;
     public EditText eventTime;
     public EditText eventNotes;
+    public long trip_id;
+    public String newTrip;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transportation_event);
+        Intent intent = getIntent();
+        newTrip = intent.getStringExtra("newTrip");
+        trip_id = intent.getLongExtra("trip_id", 0);
         eventName = (EditText) findViewById(R.id.event_name);
         eventTransportation = (Spinner) findViewById(R.id.event_transportation);
         eventDate = (EditText) findViewById(R.id.event_date);
@@ -80,6 +87,15 @@ public class TransportationEvent extends Activity {
         Intent intent = new Intent(TransportationEvent.this, TripOptions.class);
         intent.putExtras(bundle);
         startActivity(intent);
+
+        db = new DBAdapter(this);
+        db.open();
+        db.updateContact(trip_id, newTrip, event_name);
+        Toast.makeText(this, newTrip + " Event " +event_name + " added." + "with id: " + trip_id,Toast.LENGTH_LONG).show();
+        db.close();
+
+
+
 
 
 

@@ -31,12 +31,21 @@ public class TripOptions extends ListActivity {
     public List<Contact> contacts;
     public String event_name;
     List<String> events = new ArrayList<String>();
+    public String newTrip;
+    public long trip_id;
     
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_options);
+
+
+        Intent intent = getIntent();
+        newTrip = intent.getStringExtra("newTrip");
+        trip_id = intent.getLongExtra("trip_id", 0);
+
+        Toast.makeText(this, "Getting id " + trip_id + "and getting name " + newTrip,Toast.LENGTH_LONG).show();
 
 
         Bundle bundle = getIntent().getExtras();
@@ -46,6 +55,15 @@ public class TripOptions extends ListActivity {
 
         }
         populateListView();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Intent intent = getIntent();
+        newTrip = intent.getStringExtra("newTrip");
+        trip_id = intent.getLongExtra("id", 0);
+
     }
 
 
@@ -105,14 +123,20 @@ public class TripOptions extends ListActivity {
 //                }
                 if(position == 0){
                     Intent transportationIntent = new Intent(getApplicationContext(), TransportationEvent.class);
+                    transportationIntent.putExtra("trip_id", trip_id);
+                    transportationIntent.putExtra("newTrip", newTrip);
                     startActivity(transportationIntent);
                 }
                 if(position == 1){
                     Intent reservationIntent = new Intent(getApplicationContext(), ReservationEvent.class);
+                    reservationIntent.putExtra("trip_id", trip_id);
+                    reservationIntent.putExtra("newTrip", newTrip);
                     startActivity(reservationIntent);
                 }
                 if(position == 2){
                     Intent customIntent = new Intent(getApplicationContext(), CustomEvent.class);
+                    customIntent.putExtra("trip_id", trip_id);
+                    customIntent.putExtra("newTrip", newTrip);
                     startActivity(customIntent);
                 }
             }

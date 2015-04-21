@@ -26,6 +26,7 @@ public class TripList extends ListActivity {
     private DBAdapter db;
     List<Contact> contacts;
     public String newTrip;
+    public long trip_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,11 +133,13 @@ public class TripList extends ListActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         db.open();
                         newTrip = tripName.getText().toString();
-                        long id = db.insertContact(newTrip, "test");
-                        Toast.makeText(getApplicationContext(), newTrip + "added with id" + id, Toast.LENGTH_LONG).show();
+                        trip_id = db.insertContact(newTrip, "test");
+                        Toast.makeText(getApplicationContext(), newTrip + "added with id" + trip_id, Toast.LENGTH_LONG).show();
                         db.close();
                         onResume();
                         Intent intent = new Intent(getApplicationContext(), TripOptions.class);
+                        intent.putExtra("trip_id", trip_id);
+                        intent.putExtra("newTrip", newTrip);
                         startActivity(intent);
                     }
                 });

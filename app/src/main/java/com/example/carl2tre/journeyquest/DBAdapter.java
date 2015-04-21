@@ -15,7 +15,7 @@ import android.util.Log;
 public class DBAdapter {
     static final String KEY_ROWID = "_id";  //Give constant names to the rows
     static final String KEY_NAME = "name";
-    static final String KEY_EMAIL = "email";
+    static final String KEY_EVENT = "event";
 
     static final String TAG = "DBAdapter";
 
@@ -25,7 +25,7 @@ public class DBAdapter {
 
     static final String DATABASE_CREATE =  //SQL commands are a pain, so make a string constant to do it
             "create table contacts (_id integer primary key autoincrement, "
-                    + "name text not null, email text not null);";
+                    + "name text not null, event text not null);";
 
     final Context context;
 
@@ -79,11 +79,11 @@ public class DBAdapter {
     }
 
     //---insert a contact into the database---
-    public long insertContact(String name, String email)
+    public long insertContact(String name, String event)
     {
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_NAME, name);
-        initialValues.put(KEY_EMAIL, email);
+        initialValues.put(KEY_EVENT, event);
         return db.insert(DATABASE_TABLE, null, initialValues);
     }
 
@@ -97,7 +97,7 @@ public class DBAdapter {
     public Cursor getAllContacts()
     {
         return db.query(DATABASE_TABLE, new String[] {KEY_ROWID, KEY_NAME,
-                KEY_EMAIL}, null, null, null, null, null);
+                KEY_EVENT}, null, null, null, null, null);
     }
 
     //---retrieves a particular contact---
@@ -105,7 +105,7 @@ public class DBAdapter {
     {
         Cursor mCursor =
                 db.query(true, DATABASE_TABLE, new String[] {KEY_ROWID,
-                                KEY_NAME, KEY_EMAIL}, KEY_ROWID + "=" + rowId, null,
+                                KEY_NAME, KEY_EVENT}, KEY_ROWID + "=" + rowId, null,
                         null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -118,7 +118,7 @@ public class DBAdapter {
     {
         ContentValues args = new ContentValues();
         args.put(KEY_NAME, name);
-        args.put(KEY_EMAIL, email);
+        args.put(KEY_EVENT, email);
         return db.update(DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
     }
 
