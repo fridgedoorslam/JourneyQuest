@@ -22,18 +22,30 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class TripOptions extends ListActivity {
     private DBAdapter db;
     public List<Contact> contacts;
-    public String newEvent;
+    public String event_name;
+    List<String> events = new ArrayList<String>();
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_options);
+
+
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null) {
+            event_name = bundle.getString("event_name");
+            events.add(event_name);
+
+        }
+        populateListView();
     }
 
 
@@ -106,6 +118,14 @@ public class TripOptions extends ListActivity {
             }
         });
         alertDialog.show();
+    }
+
+    public void populateListView(){
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_checked, events);
+        setListAdapter(adapter);
+        getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+
     }
 
 }

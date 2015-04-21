@@ -1,19 +1,37 @@
 package com.example.carl2tre.journeyquest;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Spinner;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class TransportationEvent extends Activity {
+    public EditText eventName;
+    public Spinner eventTransportation;
+    public EditText eventDate;
+    public EditText eventTime;
+    public EditText eventNotes;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transportation_event);
+        eventName = (EditText) findViewById(R.id.event_name);
+        eventTransportation = (Spinner) findViewById(R.id.event_transportation);
+        eventDate = (EditText) findViewById(R.id.event_date);
+        eventTime = (EditText) findViewById(R.id.event_time);
+        eventNotes = (EditText) findViewById(R.id.event_notes);
+
     }
 
 
@@ -39,11 +57,31 @@ public class TransportationEvent extends Activity {
         return super.onOptionsItemSelected(item);
     }
     @Override
-    public void onBackPressed(){
-
-    }
+    public void onBackPressed(){}
 
     public void onCancel(View view){
         finish();
+    }
+
+    public void onSubmit(View view) {
+        String event_name = eventName.getText().toString();
+        String event_transporation = eventTransportation.getSelectedItem().toString();
+        String event_date = eventDate.getText().toString();
+        String event_time = eventTime.getText().toString();
+        String event_notes = eventNotes.getText().toString();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("event_name", event_name);
+        bundle.putString("event_transportation", event_transporation);
+        bundle.putString("event_date", event_date);
+        bundle.putString("event_time", event_time);
+        bundle.putString("event_notes", event_notes);
+
+        Intent intent = new Intent(TransportationEvent.this, TripOptions.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+
+
+
     }
 }
