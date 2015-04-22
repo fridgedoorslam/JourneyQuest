@@ -32,6 +32,8 @@ public class TripList extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_list);
+
+
     }
 
     @Override
@@ -39,9 +41,7 @@ public class TripList extends ListActivity {
         super.onResume();
         db = new DBAdapter(this);
         db.open();
-
         contacts = Contact.getAll(db);
-
         db.close();
 
         ArrayAdapter<Contact> adapter = new ArrayAdapter<Contact>(this, android.R.layout.simple_list_item_checked, contacts);
@@ -138,8 +138,8 @@ public class TripList extends ListActivity {
                         db.close();
                         onResume();
                         Intent intent = new Intent(getApplicationContext(), TripOptions.class);
-                        intent.putExtra("trip_id", trip_id);
-                        intent.putExtra("newTrip", newTrip);
+                        intent.putExtra("com.example.carl2tre.journeyquest.trip_id", trip_id);
+                        intent.putExtra("com.example.carl2tre.journeyquest.newTrip", newTrip);
                         startActivity(intent);
                     }
                 });

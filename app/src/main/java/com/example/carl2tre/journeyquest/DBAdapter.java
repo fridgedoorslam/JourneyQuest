@@ -114,11 +114,11 @@ public class DBAdapter {
     }
 
     //---updates a contact---
-    public boolean updateContact(long rowId, String name, String email)
+    public boolean updateContact(long rowId, String name, String event)
     {
         ContentValues args = new ContentValues();
         args.put(KEY_NAME, name);
-        args.put(KEY_EVENT, email);
+        args.put(KEY_EVENT, event);
         return db.update(DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
     }
 

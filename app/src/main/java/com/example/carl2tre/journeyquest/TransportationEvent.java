@@ -2,8 +2,10 @@ package com.example.carl2tre.journeyquest;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,14 +32,20 @@ public class TransportationEvent extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transportation_event);
+        db = new DBAdapter(this);
+        db.open();
         Intent intent = getIntent();
-        newTrip = intent.getStringExtra("newTrip");
-        trip_id = intent.getLongExtra("trip_id", 0);
+        newTrip = intent.getStringExtra("com.example.carl2tre.journeyquest.newTrip");
+        trip_id = intent.getLongExtra("com.example.carl2tre.journeyquest.trip_id", 0);
+
+
+        Toast.makeText(this, "Getting id " + trip_id + "and getting name " + newTrip,Toast.LENGTH_LONG).show();
         eventName = (EditText) findViewById(R.id.event_name);
         eventTransportation = (Spinner) findViewById(R.id.event_transportation);
         eventDate = (EditText) findViewById(R.id.event_date);
         eventTime = (EditText) findViewById(R.id.event_time);
         eventNotes = (EditText) findViewById(R.id.event_notes);
+        db.close();
 
     }
 
@@ -87,11 +95,12 @@ public class TransportationEvent extends Activity {
         Intent intent = new Intent(TransportationEvent.this, TripOptions.class);
         intent.putExtras(bundle);
         startActivity(intent);
+        Cursor c = db.getContact(trip_id);
 
         db = new DBAdapter(this);
         db.open();
         db.updateContact(trip_id, newTrip, event_name);
-        Toast.makeText(this, newTrip + " Event " +event_name + " added." + "with id: " + trip_id,Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), "Made Event: " + c.getString(c.getColumnIndex(db.KEY_EVENT)), Toast.LENGTH_LONG).show();
         db.close();
 
 

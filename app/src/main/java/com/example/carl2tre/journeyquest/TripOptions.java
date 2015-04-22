@@ -27,7 +27,7 @@ import java.util.List;
 
 
 public class TripOptions extends ListActivity {
-    private DBAdapter db;
+    private DBAdapter db = new DBAdapter(this);
     public List<Contact> contacts;
     public String event_name;
     List<String> events = new ArrayList<String>();
@@ -40,21 +40,26 @@ public class TripOptions extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_options);
 
-
         Intent intent = getIntent();
-        newTrip = intent.getStringExtra("newTrip");
-        trip_id = intent.getLongExtra("trip_id", 0);
+        newTrip = intent.getStringExtra("com.example.carl2tre.journeyquest.newTrip");
+        trip_id = intent.getLongExtra("com.example.carl2tre.journeyquest.trip_id", 0);
+
+        db.open();
+        Cursor c = db.getContact(1);
+
+        Toast.makeText(getBaseContext(), "Getting Event: " + c.getString(c.getColumnIndex(db.KEY_EVENT)), Toast.LENGTH_LONG).show();
 
         Toast.makeText(this, "Getting id " + trip_id + "and getting name " + newTrip,Toast.LENGTH_LONG).show();
 
+        db.close();
 
-        Bundle bundle = getIntent().getExtras();
-        if(bundle != null) {
-            event_name = bundle.getString("event_name");
-            events.add(event_name);
-
-        }
-        populateListView();
+//        Bundle bundle = getIntent().getExtras();
+//        if(bundle != null) {
+//            event_name = bundle.getString("event_name");
+//            events.add(event_name);
+//
+//        }
+//        populateListView();
     }
 
     @Override
