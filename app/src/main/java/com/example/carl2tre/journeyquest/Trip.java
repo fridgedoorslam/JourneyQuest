@@ -11,23 +11,18 @@ public class Trip {
     private String name;
     private long id;
 
-    public String getName(){
-        return name;}
+    //Getters
+    public String getName(){ return name; }
     public long getId() {
         return id;
     }
 
+    //Setters
+    public void setId(long id1){ id = (id1 > 0) ? id1 : 0; }
     public void setName(String n){
         name = n;
     }
-    public void setId(long id1){
-        if (id1 > 0){
-            id = id1;
-        }
-        else{
-            id = 0;
-        }
-    }
+
 
     public String toString(){
         return name;
