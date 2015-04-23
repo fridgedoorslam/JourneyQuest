@@ -30,7 +30,6 @@ public class TripOptions extends ListActivity {
     private DBAdapter db = new DBAdapter(this);
     public List<Contact> contacts;
     public String event_name;
-    List<String> events = new ArrayList<String>();
     public String newTrip;
     public long trip_id;
     
@@ -39,36 +38,54 @@ public class TripOptions extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_options);
-
         Intent intent = getIntent();
         newTrip = intent.getStringExtra("com.example.carl2tre.journeyquest.newTrip");
         trip_id = intent.getLongExtra("com.example.carl2tre.journeyquest.trip_id", 0);
-
         db.open();
-        Cursor c = db.getContact(1);
-
-        Toast.makeText(getBaseContext(), "Getting Event: " + c.getString(c.getColumnIndex(db.KEY_EVENT)), Toast.LENGTH_LONG).show();
-
-        Toast.makeText(this, "Getting id " + trip_id + "and getting name " + newTrip,Toast.LENGTH_LONG).show();
-
         db.close();
 
-//        Bundle bundle = getIntent().getExtras();
-//        if(bundle != null) {
-//            event_name = bundle.getString("event_name");
-//            events.add(event_name);
-//
-//        }
-//        populateListView();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        Intent intent = new Intent();
+        intent.putExtra("com.example.carl2tre.newTrip", newTrip);
+        intent.putExtra("com.example.carl2tre.trip_id", trip_id);
+
     }
 
     @Override
     public void onResume(){
         super.onResume();
-        Intent intent = getIntent();
-        newTrip = intent.getStringExtra("newTrip");
-        trip_id = intent.getLongExtra("id", 0);
+        db = new DBAdapter(this);
+        db.open();
+        contacts = Contact.getAll(db);
+        db.close();
 
+        ArrayAdapter<Contact> adapter = new ArrayAdapter<Contact>(this, android.R.layout.simple_list_item_checked, contacts);
+        setListAdapter(adapter);
+        getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+
+        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //position is the spot on the View. It does not correspond to the position in the db.
+                //Rather, it corresponds to the position in the List<Contacts>
+                //We need to map the position in the list to the position in the db
+
+                final long dbPosition = contacts.get(position).getId();
+
+                db.open();
+                Cursor c = db.getContact(dbPosition);
+                Toast.makeText(getApplicationContext(),"Event: " + c.getString(c.getColumnIndex(db.KEY_EVENT)), Toast.LENGTH_SHORT).show();
+
+
+                db.close();
+
+            }
+        });
     }
 
 
@@ -111,50 +128,26 @@ public class TripOptions extends ListActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(getApplicationContext(), "Position is: " + position, Toast.LENGTH_LONG).show();
-//                switch (position){
-//                    case 0:
-//                        Toast.makeText(getApplicationContext(), "Position is: " + position, Toast.LENGTH_LONG).show();
-//                        Intent transportationIntent = new Intent(getApplicationContext(), TransportationEvent.class);
-//                        startActivity(transportationIntent);
-//                    case 1:
-//                        Toast.makeText(getApplicationContext(), "Position is: " + position, Toast.LENGTH_LONG).show();
-//                        Intent reservationIntent = new Intent(getApplicationContext(), ReservationEvent.class);
-//                        startActivity(reservationIntent);
-//                    case 2:
-//                        Toast.makeText(getApplicationContext(), "Position is: " + position, Toast.LENGTH_LONG).show();
-//                        Intent customIntent = new Intent(getApplicationContext(), CustomEvent.class);
-//                        startActivity(customIntent);
-//                }
                 if(position == 0){
                     Intent transportationIntent = new Intent(getApplicationContext(), TransportationEvent.class);
-                    transportationIntent.putExtra("trip_id", trip_id);
-                    transportationIntent.putExtra("newTrip", newTrip);
+                    transportationIntent.putExtra("com.example.carl2tre.journeyquest.trip_id", trip_id);
+                    transportationIntent.putExtra("com.example.carl2tre.journeyquest.newTrip", newTrip);
                     startActivity(transportationIntent);
                 }
                 if(position == 1){
                     Intent reservationIntent = new Intent(getApplicationContext(), ReservationEvent.class);
-                    reservationIntent.putExtra("trip_id", trip_id);
-                    reservationIntent.putExtra("newTrip", newTrip);
+                    reservationIntent.putExtra("com.example.carl2tre.journeyquest.trip_id", trip_id);
+                    reservationIntent.putExtra("com.example.carl2tre.journeyquest.newTrip", newTrip);
                     startActivity(reservationIntent);
                 }
                 if(position == 2){
                     Intent customIntent = new Intent(getApplicationContext(), CustomEvent.class);
-                    customIntent.putExtra("trip_id", trip_id);
-                    customIntent.putExtra("newTrip", newTrip);
+                    customIntent.putExtra("com.example.carl2tre.journeyquest.trip_id", trip_id);
+                    customIntent.putExtra("com.example.carl2tre.journeyquest.newTrip", newTrip);
                     startActivity(customIntent);
                 }
             }
         });
         alertDialog.show();
     }
-
-    public void populateListView(){
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_checked, events);
-        setListAdapter(adapter);
-        getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
-
-    }
-
 }

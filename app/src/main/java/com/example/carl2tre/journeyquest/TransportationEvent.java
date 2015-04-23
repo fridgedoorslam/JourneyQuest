@@ -24,22 +24,27 @@ public class TransportationEvent extends Activity {
     public EditText eventDate;
     public EditText eventTime;
     public EditText eventNotes;
+    public String event_name;
+    public String event_transportation;
+    public String event_date;
+    public String event_time;
+    public String event_notes;
     public long trip_id;
     public String newTrip;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transportation_event);
-        db = new DBAdapter(this);
-        db.open();
+
         Intent intent = getIntent();
         newTrip = intent.getStringExtra("com.example.carl2tre.journeyquest.newTrip");
         trip_id = intent.getLongExtra("com.example.carl2tre.journeyquest.trip_id", 0);
-
-
-        Toast.makeText(this, "Getting id " + trip_id + "and getting name " + newTrip,Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Getting id " + trip_id + "and getting name " + newTrip,Toast.LENGTH_SHORT).show();
+        db = new DBAdapter(this);
+        db.open();
         eventName = (EditText) findViewById(R.id.event_name);
         eventTransportation = (Spinner) findViewById(R.id.event_transportation);
         eventDate = (EditText) findViewById(R.id.event_date);
@@ -47,6 +52,15 @@ public class TransportationEvent extends Activity {
         eventNotes = (EditText) findViewById(R.id.event_notes);
         db.close();
 
+    }
+    
+    @Override
+    public void onResume(){
+        super.onResume();
+        Intent intent = getIntent();
+        newTrip = intent.getStringExtra("com.example.carl2tre.journeyquest.newTrip");
+        trip_id = intent.getLongExtra("com.example.carl2tre.journeyquest.trip_id", 0);
+        Toast.makeText(this, "Getting id " + trip_id + "and getting name " + newTrip,Toast.LENGTH_SHORT).show();
     }
 
 
@@ -79,29 +93,23 @@ public class TransportationEvent extends Activity {
     }
 
     public void onSubmit(View view) {
-        String event_name = eventName.getText().toString();
-        String event_transporation = eventTransportation.getSelectedItem().toString();
-        String event_date = eventDate.getText().toString();
-        String event_time = eventTime.getText().toString();
-        String event_notes = eventNotes.getText().toString();
 
-        Bundle bundle = new Bundle();
-        bundle.putString("event_name", event_name);
-        bundle.putString("event_transportation", event_transporation);
-        bundle.putString("event_date", event_date);
-        bundle.putString("event_time", event_time);
-        bundle.putString("event_notes", event_notes);
-
-        Intent intent = new Intent(TransportationEvent.this, TripOptions.class);
-        intent.putExtras(bundle);
-        startActivity(intent);
-        Cursor c = db.getContact(trip_id);
+        event_name = eventName.getText().toString();
+        event_transportation = eventTransportation.getSelectedItem().toString();
+        event_date = eventDate.getText().toString();
+        event_time = eventTime.getText().toString();
+        event_notes = eventNotes.getText().toString();
 
         db = new DBAdapter(this);
         db.open();
-        db.updateContact(trip_id, newTrip, event_name);
-        Toast.makeText(getBaseContext(), "Made Event: " + c.getString(c.getColumnIndex(db.KEY_EVENT)), Toast.LENGTH_LONG).show();
+        long eventId = db.insertEvent(event_name, event_transportation, "Date", event_notes);
         db.close();
+
+
+        Intent intent = new Intent(TransportationEvent.this, TripOptions.class);
+        intent.putExtra("com.example.carl2tre.journeyquest.newTrip", newTrip);
+        intent.putExtra("com.example.carl2tre.journeyquest.trip_id", trip_id);
+        startActivity(intent);
 
 
 
