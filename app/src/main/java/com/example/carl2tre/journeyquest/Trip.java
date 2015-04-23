@@ -7,7 +7,7 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Contact {
+public class Trip {
     private String name;
     private long id;
 
@@ -33,28 +33,28 @@ public class Contact {
         return name;
     }
 
-    static public List<Contact> getAll(DBAdapter db){ //this is a class method
-        List<Contact> contacts = new ArrayList<Contact>();
+    static public List<Trip> getAll(DBAdapter db){ //this is a class method
+        List<Trip> trips = new ArrayList<Trip>();
         Cursor c = db.getAllContacts();
         if (c.moveToFirst())
         {
             do {
-                Contact contact = cursorToContact(c, db);
-                contacts.add(contact);
+                Trip trip = cursorToContact(c, db);
+                trips.add(trip);
 
             } while (c.moveToNext());
         }
         c.close();
 
-        return contacts;
+        return trips;
     }
 
-    static public Contact cursorToContact( Cursor c, DBAdapter db){
-        Contact contact = new Contact();
-        contact.setId(c.getInt(c.getColumnIndex(db.KEY_ROWID)));
-        contact.setName(c.getString(c.getColumnIndex(db.KEY_NAME)));
+    static public Trip cursorToContact( Cursor c, DBAdapter db){
+        Trip trip = new Trip();
+        trip.setId(c.getInt(c.getColumnIndex(db.KEY_ROWID)));
+        trip.setName(c.getString(c.getColumnIndex(db.KEY_NAME)));
 
-        return contact;
+        return trip;
 
     }
 }

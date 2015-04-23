@@ -13,7 +13,7 @@ import android.util.Log;
 
 
 public class DBAdapter {
-    static final String DATABASE_TABLE = "contacts";
+    static final String DATABASE_TABLE = "trips";
     static final String KEY_ROWID = "_id";  //Give constant names to the rows
     static final String KEY_NAME = "name";
     static final String KEY_EVENT = "event";
@@ -29,10 +29,10 @@ public class DBAdapter {
 
 
 
-    static final int DATABASE_VERSION = 5;
+    static final int DATABASE_VERSION = 6;
 
     static final String DATABASE_CREATE =  //SQL commands are a pain, so make a string constant to do it
-            "create table contacts (_id integer primary key autoincrement, "
+            "create table trips (_id integer primary key autoincrement, "
                     + "name text not null, event text not null);";
 
     static final String DATABASE_EVENTS_CREATE =
