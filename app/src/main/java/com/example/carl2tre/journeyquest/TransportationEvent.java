@@ -42,7 +42,6 @@ public class TransportationEvent extends Activity {
         Intent intent = getIntent();
         newTrip = intent.getStringExtra("com.example.carl2tre.journeyquest.newTrip");
         trip_id = intent.getLongExtra("com.example.carl2tre.journeyquest.trip_id", 0);
-        Toast.makeText(this, "Getting id " + trip_id + "and getting name " + newTrip,Toast.LENGTH_SHORT).show();
         db = new DBAdapter(this);
         db.open();
         eventName = (EditText) findViewById(R.id.event_name);
@@ -60,7 +59,6 @@ public class TransportationEvent extends Activity {
         Intent intent = getIntent();
         newTrip = intent.getStringExtra("com.example.carl2tre.journeyquest.newTrip");
         trip_id = intent.getLongExtra("com.example.carl2tre.journeyquest.trip_id", 0);
-        Toast.makeText(this, "Getting id " + trip_id + "and getting name " + newTrip,Toast.LENGTH_SHORT).show();
     }
 
 

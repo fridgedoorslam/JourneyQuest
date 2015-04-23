@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name">JourneyQuest</string>
+    <string name="app_name">Trip Names</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_trip_options">TripOptions</string>
+    <string name="title_activity_trip_options">Trip Events</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_splash_screen">SplashScreen</string>
-    <string name="title_activity_transportation_event">TransportationEvent</string>
-    <string name="title_activity_reservation_event">ReservationEvent</string>
-    <string name="title_activity_custom_event">CustomEvent</string>
+    <string name="title_activity_transportation_event">Transportation Event</string>
+    <string name="title_activity_reservation_event">Reservation Event</string>
+    <string name="title_activity_custom_event">Custom Event</string>
     <string name="event_name">Event Name: </string>
     <string name="transportation_type">Transportation Type: </string>
     <string name="reservation_type">Reservation Type: </string>

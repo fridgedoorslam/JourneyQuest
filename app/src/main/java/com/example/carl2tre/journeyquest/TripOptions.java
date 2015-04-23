@@ -20,6 +20,7 @@ import java.util.List;
 public class TripOptions extends ListActivity {
     private DBAdapter db = new DBAdapter(this);
     public List<Trip> trips;
+    public List<Event> events;
     public String event_name;
     public String newTrip;
     public long trip_id;
@@ -51,10 +52,11 @@ public class TripOptions extends ListActivity {
         super.onResume();
         db = new DBAdapter(this);
         db.open();
-        trips = Trip.getAll(db);
+        //trips = Trip.getAll(db);
+        events = Event.getAll(db);
         db.close();
 
-        ArrayAdapter<Trip> adapter = new ArrayAdapter<Trip>(this, android.R.layout.simple_list_item_checked, trips);
+        ArrayAdapter<Event> adapter = new ArrayAdapter<Event>(this, android.R.layout.simple_list_item_checked, events);
         setListAdapter(adapter);
         getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
@@ -66,11 +68,14 @@ public class TripOptions extends ListActivity {
                 //Rather, it corresponds to the position in the List<Contacts>
                 //We need to map the position in the list to the position in the db
 
-                final long dbPosition = trips.get(position).getId();
+                final long dbPosition = events.get(position).getId();
 
                 db.open();
-                Cursor c = db.getContact(dbPosition);
-                Toast.makeText(getApplicationContext(), "Event: " + c.getString(c.getColumnIndex(db.KEY_EVENT)), Toast.LENGTH_SHORT).show();
+                Cursor c = db.getEvent(dbPosition);
+                Toast.makeText(getApplicationContext(), "Event: " + c.getString(c.getColumnIndex(db.KEY_EVENT_NAME))
+                        + "\nTransportation: " + c.getString(c.getColumnIndex(db.KEY_EVENT_TRANSPORTATION_TYPE))
+                        + "\nDate: " + c.getString(c.getColumnIndex(db.KEY_EVENT_DATE))
+                        + "\nNotes: " + c.getString(c.getColumnIndex(db.KEY_EVENT_NOTES)), Toast.LENGTH_SHORT).show();
 
 
                 db.close();

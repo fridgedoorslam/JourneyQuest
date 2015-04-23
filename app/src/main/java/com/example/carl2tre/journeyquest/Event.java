@@ -33,26 +33,27 @@ public class Event {
         return eventName;
     }
 
-    static public List<Trip> getAll(DBAdapter db){ //this is a class method
-        List<Trip> trips = new ArrayList<Trip>();
-        Cursor c = db.getAllContacts();
+    static public List<Event> getAll(DBAdapter db){ //this is a class method
+        List<Event> events = new ArrayList<Event>();
+        Cursor c = db.getAllEvents();
         if (c.moveToFirst())
         {
             do {
-                Trip trip = cursorToContact(c, db);
-                trips.add(trip);
+                Event event = cursorToContact(c, db);
+                events.add(event);
 
             } while (c.moveToNext());
         }
         c.close();
 
-        return trips;
+        return events;
     }
 
-    static public Trip cursorToContact( Cursor c, DBAdapter db){
-        Trip trip = new Trip();
-        trip.setId(c.getInt(c.getColumnIndex(db.KEY_ROWID)));
-        trip.setName(c.getString(c.getColumnIndex(db.KEY_NAME)));
-        return trip;
+    static public Event cursorToContact( Cursor c, DBAdapter db){
+        Event event = new Event();
+        event.setId(c.getInt(c.getColumnIndex(db.KEY_ROWID)));
+        event.setName(c.getString(c.getColumnIndex(db.KEY_EVENT_NAME)));
+
+        return event;
     }
 }

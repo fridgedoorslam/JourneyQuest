@@ -118,7 +118,6 @@ public class TripList extends ListActivity {
     }
 
     public void onTap(View view){
-        Toast.makeText(this, "Tapped", Toast.LENGTH_SHORT).show();
         final EditText tripName = new EditText(this);
         AlertDialog.Builder nameBuild = new AlertDialog.Builder(this);
         nameBuild.setTitle("Name your trip");

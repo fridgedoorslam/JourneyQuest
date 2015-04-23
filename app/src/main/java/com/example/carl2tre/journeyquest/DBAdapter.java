@@ -8,6 +8,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
@@ -131,12 +132,31 @@ public class DBAdapter {
                 KEY_EVENT}, null, null, null, null, null);
         }
 
+    public Cursor getAllEvents()
+    {
+        return db.query(DATABASE_EVENT_TABLE, new String[] {KEY_ROWID, KEY_EVENT_NAME,
+                KEY_EVENT_TRANSPORTATION_TYPE, KEY_EVENT_DATE, KEY_EVENT_NOTES} ,
+                null, null, null, null, null);
+    }
+
     //---retrieves a particular contact---
     public Cursor getContact(long rowId) throws SQLException
     {
         Cursor mCursor =
                 db.query(true, DATABASE_TABLE, new String[] {KEY_ROWID,
                                 KEY_NAME, KEY_EVENT}, KEY_ROWID + "=" + rowId, null,
+                        null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+    public Cursor getEvent(long rowId) throws SQLiteException
+    {
+        Cursor mCursor =
+                db.query(true, DATABASE_EVENT_TABLE, new String[] {KEY_ROWID,
+                        KEY_EVENT_NAME, KEY_EVENT_TRANSPORTATION_TYPE, KEY_EVENT_DATE, KEY_EVENT_NOTES}, KEY_ROWID + "=" + rowId, null,
                         null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
