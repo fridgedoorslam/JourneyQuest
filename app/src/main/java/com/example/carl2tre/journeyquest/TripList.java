@@ -56,9 +56,9 @@ public class TripList extends ListActivity {
                 final long dbPosition = trips.get(position).getId();
 
                 db.open();
-                Cursor c = db.getContact(dbPosition);
+                Cursor c = db.getTrip(dbPosition);
 
-                Intent intent = new Intent(TripList.this, TripOptions.class);
+                Intent intent = new Intent(TripList.this, EventList.class);
                 startActivity(intent);
 
                 db.close();
@@ -129,11 +129,11 @@ public class TripList extends ListActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         db.open();
                         newTrip = tripName.getText().toString();
-                        trip_id = db.insertContact(newTrip, "test");
+                        trip_id = db.insertTrip(newTrip);
                         Toast.makeText(getApplicationContext(), newTrip + "added with id" + trip_id, Toast.LENGTH_LONG).show();
                         db.close();
                         onResume();
-                        Intent intent = new Intent(getApplicationContext(), TripOptions.class);
+                        Intent intent = new Intent(getApplicationContext(), EventList.class);
                         intent.putExtra("com.example.carl2tre.journeyquest.trip_id", trip_id);
                         intent.putExtra("com.example.carl2tre.journeyquest.newTrip", newTrip);
                         startActivity(intent);

@@ -33,9 +33,9 @@ public class Event {
         return eventName;
     }
 
-    static public List<Event> getAll(DBAdapter db){ //this is a class method
+    static public List<Event> getAll(DBAdapter db, long tripID){ //this is a class method
         List<Event> events = new ArrayList<Event>();
-        Cursor c = db.getAllEvents();
+        Cursor c = db.getAllEventsSorted(tripID);
         if (c.moveToFirst())
         {
             do {
@@ -51,7 +51,7 @@ public class Event {
 
     static public Event cursorToContact( Cursor c, DBAdapter db){
         Event event = new Event();
-        event.setId(c.getInt(c.getColumnIndex(db.KEY_ROWID)));
+        event.setId(c.getInt(c.getColumnIndex(db.KEY_TRIP_ID)));
         event.setName(c.getString(c.getColumnIndex(db.KEY_EVENT_NAME)));
 
         return event;

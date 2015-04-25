@@ -2,19 +2,12 @@ package com.example.carl2tre.journeyquest;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 
 public class TransportationEvent extends Activity {
@@ -100,11 +93,11 @@ public class TransportationEvent extends Activity {
 
         db = new DBAdapter(this);
         db.open();
-        long eventId = db.insertEvent(event_name, event_transportation, "Date", event_notes);
+        long eventId = db.insertEvent(trip_id, event_name, event_transportation, "Date", event_notes);
         db.close();
 
 
-        Intent intent = new Intent(TransportationEvent.this, TripOptions.class);
+        Intent intent = new Intent(TransportationEvent.this, EventList.class);
         intent.putExtra("com.example.carl2tre.journeyquest.newTrip", newTrip);
         intent.putExtra("com.example.carl2tre.journeyquest.trip_id", trip_id);
         startActivity(intent);

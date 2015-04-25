@@ -17,7 +17,7 @@ import android.widget.Toast;
 import java.util.List;
 
 
-public class TripOptions extends ListActivity {
+public class EventList extends ListActivity {
     private DBAdapter db = new DBAdapter(this);
     public List<Trip> trips;
     public List<Event> events;
@@ -29,7 +29,7 @@ public class TripOptions extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trip_options);
+        setContentView(R.layout.activity_event_list);
         Intent intent = getIntent();
         newTrip = intent.getStringExtra("com.example.carl2tre.journeyquest.newTrip");
         trip_id = intent.getLongExtra("com.example.carl2tre.journeyquest.trip_id", 0);
@@ -53,7 +53,7 @@ public class TripOptions extends ListActivity {
         db = new DBAdapter(this);
         db.open();
         //trips = Trip.getAll(db);
-        events = Event.getAll(db);
+        events = Event.getAll(db, trip_id);
         db.close();
 
         ArrayAdapter<Event> adapter = new ArrayAdapter<Event>(this, android.R.layout.simple_list_item_checked, events);
@@ -112,7 +112,7 @@ public class TripOptions extends ListActivity {
 
 
         String eventTypes[] ={"Transportation","Reservations","Custom"};
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(TripOptions.this);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(EventList.this);
         LayoutInflater inflater = getLayoutInflater();
         View convertView = (View) inflater.inflate(R.layout.dialog, null);
         alertDialog.setView(convertView);
@@ -145,5 +145,13 @@ public class TripOptions extends ListActivity {
             }
         });
         alertDialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, TripList.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 }

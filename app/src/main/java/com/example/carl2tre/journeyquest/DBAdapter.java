@@ -14,12 +14,15 @@ import android.util.Log;
 
 
 public class DBAdapter {
-    static final String DATABASE_TABLE = "trips";
-    static final String KEY_ROWID = "_id";  //Give constant names to the rows
-    static final String KEY_NAME = "name";
-    static final String KEY_EVENT = "event";
 
+    // Trip Table
+    static final String DATABASE_TRIP_TABLE = "trips";
+    static final String KEY_TRIP_ID = "tripID";  //Give constant names to the rows
+    static final String KEY_TRIP_NAME = "tripName";
+
+    // Event Table
     static final String DATABASE_EVENT_TABLE = "events";
+    static final String KEY_EVENT_ID = "eventID";
     static final String KEY_EVENT_NAME = "eventName";
     static final String KEY_EVENT_TRANSPORTATION_TYPE = "transportationType";
     static final String KEY_EVENT_DATE = "eventDate";
@@ -30,15 +33,16 @@ public class DBAdapter {
 
 
 
-    static final int DATABASE_VERSION = 6;
+    static final int DATABASE_VERSION = 1;
 
     static final String DATABASE_CREATE =  //SQL commands are a pain, so make a string constant to do it
-            "create table trips (_id integer primary key autoincrement, "
-                    + "name text not null, event text not null);";
+            "create table trips (tripID integer primary key autoincrement, "
+            + "tripName text not null);";
 
     static final String DATABASE_EVENTS_CREATE =
-            "create table events (_id integer primary key autoincrement, "
-            + "eventName text not null, transportationType text not null, eventDate text not null, eventNotes text not null);";
+            "create table events (eventID integer primary key autoincrement, "
+            + "tripID long not null, eventName text not null, transportationType text not null, "
+            + "eventDate text not null, eventNotes text not null);";
 
     final Context context;
 
@@ -98,53 +102,58 @@ public class DBAdapter {
         DBHelper.close();
     }
 
-    //---insert a contact into the database---
-    public long insertContact(String name, String event)
+    //---insert a trip into the database---
+    public long insertTrip(String name)
     {
         ContentValues initialValues = new ContentValues();
-        initialValues.put(KEY_NAME, name);
-        initialValues.put(KEY_EVENT, event);
-        return db.insert(DATABASE_TABLE, null, initialValues);
+        initialValues.put(KEY_TRIP_NAME, name);
+        return db.insert(DATABASE_TRIP_TABLE, null, initialValues);
     }
 
     //---insert an event into the database---
-    public long insertEvent(String eventName, String eventTransportationType, String eventDate, String eventNotes)
+    public long insertEvent(long tripID, String eventName, String eventTransportationType, String eventDate, String eventNotes)
     {
         ContentValues initialValues = new ContentValues();
+        initialValues.put(KEY_TRIP_ID, tripID);
         initialValues.put(KEY_EVENT_NAME, eventName);
         initialValues.put(KEY_EVENT_TRANSPORTATION_TYPE, eventTransportationType);
         initialValues.put(KEY_EVENT_DATE, eventDate);
         initialValues.put(KEY_EVENT_NOTES, eventNotes);
         return db.insert(DATABASE_EVENT_TABLE, null, initialValues);
-
     }
 
-    //---deletes a particular contact---
-    public boolean deleteContact(long rowId)
+    //---deletes a particular trip---
+    public boolean deleteTrip(long rowId)
     {
-        return db.delete(DATABASE_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
+        return db.delete(DATABASE_TRIP_TABLE, KEY_TRIP_ID + "=" + rowId, null) > 0;
     }
 
-    //---retrieves all the contacts---
-    public Cursor getAllContacts()
+    //---retrieves all the trips---
+    public Cursor getAllTrips()
     {
-        return db.query(DATABASE_TABLE, new String[] {KEY_ROWID, KEY_NAME,
-                KEY_EVENT}, null, null, null, null, null);
-        }
+        return db.query(DATABASE_TRIP_TABLE, new String[] {KEY_TRIP_ID, KEY_TRIP_NAME}, null, null, null, null, null);
+    }
 
     public Cursor getAllEvents()
     {
-        return db.query(DATABASE_EVENT_TABLE, new String[] {KEY_ROWID, KEY_EVENT_NAME,
+        return db.query(DATABASE_EVENT_TABLE, new String[] {KEY_TRIP_ID, KEY_EVENT_NAME,
                 KEY_EVENT_TRANSPORTATION_TYPE, KEY_EVENT_DATE, KEY_EVENT_NOTES} ,
                 null, null, null, null, null);
     }
 
-    //---retrieves a particular contact---
-    public Cursor getContact(long rowId) throws SQLException
+    public Cursor getAllEventsSorted(long tripID)
+    {
+        Log.d("-- DBAdapter tripID: ", tripID + " Event ID: " + KEY_EVENT_ID);
+        return db.query(DATABASE_EVENT_TABLE, new String[] {KEY_EVENT_ID, KEY_TRIP_ID, KEY_EVENT_NAME, KEY_EVENT_TRANSPORTATION_TYPE,
+        KEY_EVENT_DATE, KEY_EVENT_NOTES}, KEY_TRIP_ID + " = " + tripID + ";", null, null, null, null);
+    }
+
+    //---retrieves a particular trip---
+    public Cursor getTrip(long rowId) throws SQLException
     {
         Cursor mCursor =
-                db.query(true, DATABASE_TABLE, new String[] {KEY_ROWID,
-                                KEY_NAME, KEY_EVENT}, KEY_ROWID + "=" + rowId, null,
+                db.query(true, DATABASE_TRIP_TABLE, new String[] {KEY_TRIP_ID,
+                                KEY_TRIP_NAME}, KEY_TRIP_ID + "=" + rowId, null,
                         null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -155,8 +164,8 @@ public class DBAdapter {
     public Cursor getEvent(long rowId) throws SQLiteException
     {
         Cursor mCursor =
-                db.query(true, DATABASE_EVENT_TABLE, new String[] {KEY_ROWID,
-                        KEY_EVENT_NAME, KEY_EVENT_TRANSPORTATION_TYPE, KEY_EVENT_DATE, KEY_EVENT_NOTES}, KEY_ROWID + "=" + rowId, null,
+                db.query(true, DATABASE_EVENT_TABLE, new String[] {KEY_TRIP_ID,
+                        KEY_EVENT_NAME, KEY_EVENT_TRANSPORTATION_TYPE, KEY_EVENT_DATE, KEY_EVENT_NOTES}, KEY_TRIP_ID + "=" + rowId, null,
                         null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -164,13 +173,12 @@ public class DBAdapter {
         return mCursor;
     }
 
-    //---updates a contact---
-    public boolean updateContact(long rowId, String name, String event)
+    //---updates a trip---
+    public boolean updateTrip(long rowId, String name)
     {
         ContentValues args = new ContentValues();
-        args.put(KEY_NAME, name);
-        args.put(KEY_EVENT, event);
-        return db.update(DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+        args.put(KEY_TRIP_NAME, name);
+        return db.update(DATABASE_TRIP_TABLE, args, KEY_TRIP_ID + "=" + rowId, null) > 0;
     }
 
 

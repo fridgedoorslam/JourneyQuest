@@ -12,7 +12,7 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".TripOptions"
+            android:name=".EventList"
             android:label="@string/title_activity_trip_options" >
         </activity>
         <activity

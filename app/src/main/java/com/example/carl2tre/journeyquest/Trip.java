@@ -30,7 +30,7 @@ public class Trip {
 
     static public List<Trip> getAll(DBAdapter db){ //this is a class method
         List<Trip> trips = new ArrayList<Trip>();
-        Cursor c = db.getAllContacts();
+        Cursor c = db.getAllTrips();
         if (c.moveToFirst())
         {
             do {
@@ -46,8 +46,8 @@ public class Trip {
 
     static public Trip cursorToContact( Cursor c, DBAdapter db){
         Trip trip = new Trip();
-        trip.setId(c.getInt(c.getColumnIndex(db.KEY_ROWID)));
-        trip.setName(c.getString(c.getColumnIndex(db.KEY_NAME)));
+        trip.setId(c.getInt(c.getColumnIndex(db.KEY_TRIP_ID)));
+        trip.setName(c.getString(c.getColumnIndex(db.KEY_TRIP_NAME)));
 
         return trip;
 
