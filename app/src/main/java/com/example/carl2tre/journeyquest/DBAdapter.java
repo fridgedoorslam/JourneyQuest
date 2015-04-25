@@ -33,7 +33,7 @@ public class DBAdapter {
 
 
 
-    static final int DATABASE_VERSION = 1;
+    static final int DATABASE_VERSION = 3;
 
     static final String DATABASE_CREATE =  //SQL commands are a pain, so make a string constant to do it
             "create table trips (tripID integer primary key autoincrement, "
@@ -143,9 +143,9 @@ public class DBAdapter {
 
     public Cursor getAllEventsSorted(long tripID)
     {
-        Log.d("-- DBAdapter tripID: ", tripID + " Event ID: " + KEY_EVENT_ID);
+        Log.d("DBAdapter", "getAllEvents Function");
         return db.query(DATABASE_EVENT_TABLE, new String[] {KEY_EVENT_ID, KEY_TRIP_ID, KEY_EVENT_NAME, KEY_EVENT_TRANSPORTATION_TYPE,
-        KEY_EVENT_DATE, KEY_EVENT_NOTES}, KEY_TRIP_ID + " = " + tripID + ";", null, null, null, null);
+        KEY_EVENT_DATE, KEY_EVENT_NOTES}, KEY_TRIP_ID + "=" + tripID, null, null, null, null);
     }
 
     //---retrieves a particular trip---

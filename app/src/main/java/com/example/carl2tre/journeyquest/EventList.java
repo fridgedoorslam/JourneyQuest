@@ -5,6 +5,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,9 +34,7 @@ public class EventList extends ListActivity {
         Intent intent = getIntent();
         newTrip = intent.getStringExtra("com.example.carl2tre.journeyquest.newTrip");
         trip_id = intent.getLongExtra("com.example.carl2tre.journeyquest.trip_id", 0);
-        db.open();
-        db.close();
-
+        Log.d("EventList onCreate", "trip_id received: " + trip_id);
     }
 
     @Override
@@ -50,9 +49,11 @@ public class EventList extends ListActivity {
     @Override
     public void onResume(){
         super.onResume();
+
         db = new DBAdapter(this);
         db.open();
         //trips = Trip.getAll(db);
+        Log.d("EventList", "" + trip_id);
         events = Event.getAll(db, trip_id);
         db.close();
 

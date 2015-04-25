@@ -53,12 +53,15 @@ public class TripList extends ListActivity {
                 //Rather, it corresponds to the position in the List<Contacts>
                 //We need to map the position in the list to the position in the db
 
-                final long dbPosition = trips.get(position).getId();
+                final long trip_id = trips.get(position).getId();
+//                trip_id = position;
 
                 db.open();
-                Cursor c = db.getTrip(dbPosition);
+                Cursor c = db.getTrip(trip_id);
 
                 Intent intent = new Intent(TripList.this, EventList.class);
+                intent.putExtra("com.example.carl2tre.journeyquest.trip_id", trip_id);
+                intent.putExtra("com.example.carl2tre.journeyquest.newTrip", newTrip);
                 startActivity(intent);
 
                 db.close();
