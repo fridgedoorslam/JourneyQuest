@@ -1,21 +1,30 @@
 package com.example.carl2tre.journeyquest;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TimePicker;
+import android.widget.Toast;
+
+import java.text.DateFormat;
+import java.util.Calendar;
 
 
-public class TransportationEvent extends Activity {
+public class TransportationEvent extends Activity implements View.OnClickListener {
     DBAdapter db;
     public EditText eventName;
     public Spinner eventTransportation;
-    public EditText eventDate;
-    public EditText eventTime;
+    public Button eventDate;
+    public Button eventTime;
     public EditText eventNotes;
     public String event_name;
     public String event_transportation;
@@ -24,13 +33,23 @@ public class TransportationEvent extends Activity {
     public String event_notes;
     public long trip_id;
     public String newTrip;
+    public Button setDateButton;
+    public Button setTimeButton;
+    DateFormat format = DateFormat.getDateInstance();
+    Calendar calendar = Calendar.getInstance();
+    public TimePickerDialog timePicker;
+    public int mHour;
+    public int mMinute;
 
 
 
-    @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transportation_event);
+
+        setDateButton = (Button) findViewById(R.id.event_date);
+        setTimeButton = (Button) findViewById(R.id.event_time);
 
         Intent intent = getIntent();
         newTrip = intent.getStringExtra("com.example.carl2tre.journeyquest.newTrip");
@@ -39,8 +58,8 @@ public class TransportationEvent extends Activity {
         db.open();
         eventName = (EditText) findViewById(R.id.event_name);
         eventTransportation = (Spinner) findViewById(R.id.event_transportation);
-        eventDate = (EditText) findViewById(R.id.event_date);
-        eventTime = (EditText) findViewById(R.id.event_time);
+        eventDate = (Button) findViewById(R.id.event_date);
+        eventTime = (Button) findViewById(R.id.event_time);
         eventNotes = (EditText) findViewById(R.id.event_notes);
         db.close();
 
@@ -87,8 +106,8 @@ public class TransportationEvent extends Activity {
 
         event_name = eventName.getText().toString();
         event_transportation = eventTransportation.getSelectedItem().toString();
-        event_date = eventDate.getText().toString();
-        event_time = eventTime.getText().toString();
+//        event_date = eventDate.getText().toString();
+//        event_time = eventTime.getText().toString();
         event_notes = eventNotes.getText().toString();
 
         db = new DBAdapter(this);
@@ -101,11 +120,49 @@ public class TransportationEvent extends Activity {
         intent.putExtra("com.example.carl2tre.journeyquest.newTrip", newTrip);
         intent.putExtra("com.example.carl2tre.journeyquest.trip_id", trip_id);
         startActivity(intent);
+    }
+
+
+    public void setDate() {
+        new DatePickerDialog(TransportationEvent.this, d, calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker arg0, int year, int month, int day) {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, day);
+
+        }
+    };
 
 
 
-
-
+    @Override
+    public void onClick(View v) {
+        setDate();
 
     }
+
+    public void onTimeTapped(View view) {
+        final Calendar calendar = Calendar.getInstance();
+        mHour = calendar.get(Calendar.HOUR_OF_DAY);
+        mMinute = calendar.get(Calendar.MINUTE);
+
+        timePicker = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute){
+                Toast.makeText(getApplicationContext(), "Time is " + mHour + ":" + mMinute,Toast.LENGTH_LONG).show();
+
+            }
+
+        }, mHour, mMinute, false);
+
+        timePicker.show();
+
+    }
+
 }
