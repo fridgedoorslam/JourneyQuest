@@ -69,9 +69,11 @@ public class EventList extends ListActivity {
                 //Rather, it corresponds to the position in the List<Contacts>
                 //We need to map the position in the list to the position in the db
 
-                final long dbPosition = events.get(position).getId();
-
+//                final long dbPosition = events.get(position).getId();
+//                Toast.makeText(getApplicationContext(), "position: " + position,Toast.LENGTH_SHORT).show();
+                final long dbPosition = position + 1;
                 db.open();
+                //Cursor c = db.getEvent(dbPosition);
                 Cursor c = db.getEvent(dbPosition);
                 Toast.makeText(getApplicationContext(), "Event: " + c.getString(c.getColumnIndex(db.KEY_EVENT_NAME))
                         + "\nTransportation: " + c.getString(c.getColumnIndex(db.KEY_EVENT_TRANSPORTATION_TYPE))

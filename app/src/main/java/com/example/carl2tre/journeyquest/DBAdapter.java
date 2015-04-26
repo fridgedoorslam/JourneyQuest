@@ -33,7 +33,7 @@ public class DBAdapter {
 
 
 
-    static final int DATABASE_VERSION = 3;
+    static final int DATABASE_VERSION = 7;
 
     static final String DATABASE_CREATE =  //SQL commands are a pain, so make a string constant to do it
             "create table trips (tripID integer primary key autoincrement, "
@@ -164,8 +164,8 @@ public class DBAdapter {
     public Cursor getEvent(long rowId) throws SQLiteException
     {
         Cursor mCursor =
-                db.query(true, DATABASE_EVENT_TABLE, new String[] {KEY_TRIP_ID,
-                        KEY_EVENT_NAME, KEY_EVENT_TRANSPORTATION_TYPE, KEY_EVENT_DATE, KEY_EVENT_NOTES}, KEY_TRIP_ID + "=" + rowId, null,
+                db.query(true, DATABASE_EVENT_TABLE, new String[] {KEY_EVENT_ID,
+                        KEY_EVENT_NAME, KEY_EVENT_TRANSPORTATION_TYPE, KEY_EVENT_DATE, KEY_EVENT_NOTES}, KEY_EVENT_ID + "=" + rowId, null,
                         null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();

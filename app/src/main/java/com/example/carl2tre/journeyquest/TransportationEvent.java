@@ -31,6 +31,7 @@ public class TransportationEvent extends Activity implements View.OnClickListene
     public String event_date;
     public String event_time;
     public String event_notes;
+    public String date;
     public long trip_id;
     public String newTrip;
     public Button setDateButton;
@@ -112,7 +113,7 @@ public class TransportationEvent extends Activity implements View.OnClickListene
 
         db = new DBAdapter(this);
         db.open();
-        long eventId = db.insertEvent(trip_id, event_name, event_transportation, "Date", event_notes);
+        long eventId = db.insertEvent(trip_id, event_name, event_transportation, date, event_notes);
         db.close();
 
 
@@ -144,6 +145,7 @@ public class TransportationEvent extends Activity implements View.OnClickListene
     @Override
     public void onClick(View v) {
         setDate();
+        date = format.format(calendar.getTime()).toString();
 
     }
 
