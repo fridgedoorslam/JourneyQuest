@@ -33,7 +33,7 @@ public class DBAdapter {
 
 
 
-    static final int DATABASE_VERSION = 7;
+    static final int DATABASE_VERSION = 8;
 
     static final String DATABASE_CREATE =  //SQL commands are a pain, so make a string constant to do it
             "create table trips (tripID integer primary key autoincrement, "

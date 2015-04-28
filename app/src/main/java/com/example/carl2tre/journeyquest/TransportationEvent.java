@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,8 +50,8 @@ public class TransportationEvent extends Activity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transportation_event);
 
-        setDateButton = (Button) findViewById(R.id.event_date);
-        setTimeButton = (Button) findViewById(R.id.event_time);
+        setDateButton = (Button) findViewById(R.id.set_date_button);
+        setTimeButton = (Button) findViewById(R.id.set_time_button);
 
         Intent intent = getIntent();
         newTrip = intent.getStringExtra("com.example.carl2tre.journeyquest.newTrip");
@@ -59,8 +60,8 @@ public class TransportationEvent extends Activity implements View.OnClickListene
         db.open();
         eventName = (EditText) findViewById(R.id.event_name);
         eventTransportation = (Spinner) findViewById(R.id.event_transportation);
-        eventDate = (Button) findViewById(R.id.event_date);
-        eventTime = (Button) findViewById(R.id.event_time);
+        eventDate = (Button) findViewById(R.id.set_date_button);
+        eventTime = (Button) findViewById(R.id.set_time_button);
         eventNotes = (EditText) findViewById(R.id.event_notes);
         db.close();
 
@@ -136,6 +137,9 @@ public class TransportationEvent extends Activity implements View.OnClickListene
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.MONTH, month);
             calendar.set(Calendar.DAY_OF_MONTH, day);
+            Log.d("Date", "Date is " +"------------" + year + month + day);
+            date = format.format(calendar.getTime()).toString();
+
 
         }
     };
@@ -143,9 +147,12 @@ public class TransportationEvent extends Activity implements View.OnClickListene
 
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View arg0) {
         setDate();
-        date = format.format(calendar.getTime()).toString();
+
+    }
+
+    public void onDateTapped(View view) {
 
     }
 

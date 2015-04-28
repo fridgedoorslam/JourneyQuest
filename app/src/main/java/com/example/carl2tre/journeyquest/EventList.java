@@ -74,11 +74,31 @@ public class EventList extends ListActivity {
                 final long dbPosition = position + 1;
                 db.open();
                 //Cursor c = db.getEvent(dbPosition);
+
                 Cursor c = db.getEvent(dbPosition);
-                Toast.makeText(getApplicationContext(), "Event: " + c.getString(c.getColumnIndex(db.KEY_EVENT_NAME))
-                        + "\nTransportation: " + c.getString(c.getColumnIndex(db.KEY_EVENT_TRANSPORTATION_TYPE))
-                        + "\nDate: " + c.getString(c.getColumnIndex(db.KEY_EVENT_DATE))
-                        + "\nNotes: " + c.getString(c.getColumnIndex(db.KEY_EVENT_NOTES)), Toast.LENGTH_SHORT).show();
+                String type = c.getString(c.getColumnIndex(db.KEY_EVENT_TRANSPORTATION_TYPE));
+
+                //Toast if transportation
+                if(type.equals("Bus") || type.equals("Plane") || type.equals("Taxi") || type.equals("Car") || type.equals("Train") || type.equals("Walking")) {
+                    Toast.makeText(getApplicationContext(), "Event Name: " + c.getString(c.getColumnIndex(db.KEY_EVENT_NAME))
+                            + "\nTransportation: " + c.getString(c.getColumnIndex(db.KEY_EVENT_TRANSPORTATION_TYPE))
+                            + "\nDate: " + c.getString(c.getColumnIndex(db.KEY_EVENT_DATE))
+                            + "\nNotes: " + c.getString(c.getColumnIndex(db.KEY_EVENT_NOTES)), Toast.LENGTH_SHORT).show();
+                }
+                //Toast if reservation
+                if(type.equals("Hotel") || type.equals("Restaurant") || type.equals("Tour") || type.equals("Other")) {
+                    Toast.makeText(getApplicationContext(), "Event Name: " + c.getString(c.getColumnIndex(db.KEY_EVENT_NAME))
+                            + "\nReservation: " + c.getString(c.getColumnIndex(db.KEY_EVENT_TRANSPORTATION_TYPE))
+                            + "\nDate: " + c.getString(c.getColumnIndex(db.KEY_EVENT_DATE))
+                            + "\nNotes: " + c.getString(c.getColumnIndex(db.KEY_EVENT_NOTES)), Toast.LENGTH_SHORT).show();
+                }
+                //Toast if custom
+                else{
+                    Toast.makeText(getApplicationContext(), "Event Name: " + c.getString(c.getColumnIndex(db.KEY_EVENT_NAME))
+                            + "\nDate: " + c.getString(c.getColumnIndex(db.KEY_EVENT_DATE))
+                            + "\nNotes: " + c.getString(c.getColumnIndex(db.KEY_EVENT_NOTES)), Toast.LENGTH_SHORT).show();
+                }
+
 
 
                 db.close();

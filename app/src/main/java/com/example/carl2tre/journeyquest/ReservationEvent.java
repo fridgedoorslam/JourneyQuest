@@ -49,7 +49,7 @@ public class ReservationEvent extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reservation_event);
 
-        setDateButton = (Button) findViewById(R.id.event_date);
+        setDateButton = (Button) findViewById(R.id.set_date_button);
         setTimeButton = (Button) findViewById(R.id.event_time);
 
         Intent intent = getIntent();
@@ -59,7 +59,7 @@ public class ReservationEvent extends Activity implements View.OnClickListener {
         db.open();
         eventName = (EditText) findViewById(R.id.event_name);
         eventReservation = (Spinner) findViewById(R.id.event_reservation);
-        eventDate = (Button) findViewById(R.id.event_date);
+        eventDate = (Button) findViewById(R.id.set_date_button);
         eventTime = (Button) findViewById(R.id.event_time);
         eventNotes = (EditText) findViewById(R.id.event_notes);
         db.close();
@@ -113,7 +113,7 @@ public class ReservationEvent extends Activity implements View.OnClickListener {
 
         db = new DBAdapter(this);
         db.open();
-        long eventId = db.insertEvent(trip_id, event_name, event_reservation, "Date", event_notes);
+        long eventId = db.insertEvent(trip_id, event_name, event_reservation, date, event_notes);
         db.close();
 
 
@@ -136,6 +136,7 @@ public class ReservationEvent extends Activity implements View.OnClickListener {
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.MONTH, month);
             calendar.set(Calendar.DAY_OF_MONTH, day);
+            date = format.format(calendar.getTime()).toString();
 
         }
     };
@@ -143,9 +144,8 @@ public class ReservationEvent extends Activity implements View.OnClickListener {
 
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View arg0) {
         setDate();
-        date = format.format(calendar.getTime()).toString();
 
     }
 
