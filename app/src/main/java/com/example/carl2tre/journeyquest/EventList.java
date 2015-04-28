@@ -1,10 +1,13 @@
 package com.example.carl2tre.journeyquest;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -65,41 +69,145 @@ public class EventList extends ListActivity {
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 //position is the spot on the View. It does not correspond to the position in the db.
                 //Rather, it corresponds to the position in the List<Contacts>
                 //We need to map the position in the list to the position in the db
 
-//                final long dbPosition = events.get(position).getId();
-//                Toast.makeText(getApplicationContext(), "position: " + position,Toast.LENGTH_SHORT).show();
+                final TextView eventTransportationType;
+
+
                 final long dbPosition = position + 1;
                 db.open();
                 //Cursor c = db.getEvent(dbPosition);
 
                 Cursor c = db.getEvent(dbPosition);
                 String type = c.getString(c.getColumnIndex(db.KEY_EVENT_TRANSPORTATION_TYPE));
+                final String event_name = c.getString(c.getColumnIndex(db.KEY_EVENT_NAME));
+                final String transportation_type = c.getString(c.getColumnIndex(db.KEY_EVENT_TRANSPORTATION_TYPE));
+                final String date = c.getString(c.getColumnIndex(db.KEY_EVENT_DATE));
+                final String notes = c.getString(c.getColumnIndex(db.KEY_EVENT_NOTES));
 
-                //Toast if transportation
+                //Transportation dialog
+                AlertDialog.Builder nameBuild = new AlertDialog.Builder(EventList.this);
                 if(type.equals("Bus") || type.equals("Plane") || type.equals("Taxi") || type.equals("Car") || type.equals("Train") || type.equals("Walking")) {
-                    Toast.makeText(getApplicationContext(), "Event Name: " + c.getString(c.getColumnIndex(db.KEY_EVENT_NAME))
-                            + "\nTransportation: " + c.getString(c.getColumnIndex(db.KEY_EVENT_TRANSPORTATION_TYPE))
-                            + "\nDate: " + c.getString(c.getColumnIndex(db.KEY_EVENT_DATE))
-                            + "\nNotes: " + c.getString(c.getColumnIndex(db.KEY_EVENT_NOTES)), Toast.LENGTH_SHORT).show();
+
+                    nameBuild.setTitle("Event Name: " + event_name);
+                    nameBuild.setMessage("Transportation Type: " + transportation_type + "\n"
+                            + "Date: " + date + "\n"
+                            + "Notes: " + notes + "\n");
+                    nameBuild.setPositiveButton("Edit Event",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    db.open();
+                                    Cursor c = db.getEvent(dbPosition);
+                                    String type = c.getString(c.getColumnIndex(db.KEY_EVENT_TRANSPORTATION_TYPE));
+                                    //Toast if transportation
+                                    if (type.equals("Bus") || type.equals("Plane") || type.equals("Taxi") || type.equals("Car") || type.equals("Train") || type.equals("Walking")) {
+                                        Intent transportationIntent = new Intent(getApplicationContext(), TransportationEvent.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("event_name", event_name);
+                                        bundle.putString("transportation_type", transportation_type);
+                                        bundle.putString("date", date);
+                                        bundle.putString("notes", notes);
+                                        transportationIntent.putExtras(bundle);
+                                        startActivity(transportationIntent);
+                                    }
+                                    db.close();
+
+                                }
+                            });
+                    nameBuild.setNegativeButton("Delete Event",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Delete event
+                                }
+
+                            });
+
+
+
+
+
+                    nameBuild.show();
                 }
-                //Toast if reservation
+
+                // Reservation Dialog
                 if(type.equals("Hotel") || type.equals("Restaurant") || type.equals("Tour") || type.equals("Other")) {
-                    Toast.makeText(getApplicationContext(), "Event Name: " + c.getString(c.getColumnIndex(db.KEY_EVENT_NAME))
-                            + "\nReservation: " + c.getString(c.getColumnIndex(db.KEY_EVENT_TRANSPORTATION_TYPE))
-                            + "\nDate: " + c.getString(c.getColumnIndex(db.KEY_EVENT_DATE))
-                            + "\nNotes: " + c.getString(c.getColumnIndex(db.KEY_EVENT_NOTES)), Toast.LENGTH_SHORT).show();
-                }
-                //Toast if custom
-                else{
-                    Toast.makeText(getApplicationContext(), "Event Name: " + c.getString(c.getColumnIndex(db.KEY_EVENT_NAME))
-                            + "\nDate: " + c.getString(c.getColumnIndex(db.KEY_EVENT_DATE))
-                            + "\nNotes: " + c.getString(c.getColumnIndex(db.KEY_EVENT_NOTES)), Toast.LENGTH_SHORT).show();
+
+                    nameBuild.setTitle("Event Name: " + event_name);
+                    nameBuild.setMessage("Reservation Type: " + transportation_type + "\n"
+                            + "Date: " + date + "\n"
+                            + "Notes: " + notes + "\n");
+                    nameBuild.setPositiveButton("Edit Event",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    db.open();
+                                    Cursor c = db.getEvent(dbPosition);
+                                    String type = c.getString(c.getColumnIndex(db.KEY_EVENT_TRANSPORTATION_TYPE));
+                                    //Toast if transportation
+                                    if(type.equals("Hotel") || type.equals("Restaurant") || type.equals("Tour") || type.equals("Other")) {
+                                        Intent reservationIntent = new Intent(getApplicationContext(), ReservationEvent.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("event_name", event_name);
+                                        bundle.putString("transportation_type", transportation_type);
+                                        bundle.putString("date", date);
+                                        bundle.putString("notes", notes);
+                                        reservationIntent.putExtras(bundle);
+                                        startActivity(reservationIntent);
+                                    }
+                                    db.close();
+
+                                }
+                            });
+                    nameBuild.setNegativeButton("Delete Event",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Delete event
+                                }
+
+                            });
+                    nameBuild.show();
                 }
 
+                // Dialog box for custom event
+                if(type.equals(" ")) {
+                    nameBuild.setTitle("Event Name: " + event_name);
+                    nameBuild.setMessage("Date: " + date + "\n" + "Notes: " + notes + "\n");
+                    nameBuild.setPositiveButton("Edit Event",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    db.open();
+                                    Cursor c = db.getEvent(dbPosition);
+                                    String type = c.getString(c.getColumnIndex(db.KEY_EVENT_TRANSPORTATION_TYPE));
+                                    //Toast if transportation
+                                    if (type.equals(" ")) {
+                                        Intent customIntent = new Intent(getApplicationContext(), CustomEvent.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("event_name", event_name);
+                                        bundle.putString("date", date);
+                                        bundle.putString("notes", notes);
+                                        customIntent.putExtras(bundle);
+                                        startActivity(customIntent);
+                                    }
+                                    db.close();
+                                }
+                            });
+                    nameBuild.setNegativeButton("Delete Event",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Delete event
+                                }
 
+                            });
+                    nameBuild.show();
+                }
 
                 db.close();
 
@@ -111,7 +219,7 @@ public class EventList extends ListActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_trip_options, menu);
+        getMenuInflater().inflate(R.menu.menu_trip_list, menu);
         return true;
     }
 
@@ -127,7 +235,20 @@ public class EventList extends ListActivity {
             return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        String text = item.getTitle().toString();
+
+        switch (item.getItemId()) {
+            case R.id.item0:
+                Intent tripIntent = new Intent(this, TripList.class);
+                startActivity(tripIntent);
+                return true;
+            case R.id.item1:
+                Intent eventIntent = new Intent(this, EventList.class);
+                startActivity(eventIntent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 

@@ -52,8 +52,9 @@ public class TransportationEvent extends Activity implements View.OnClickListene
 
         setDateButton = (Button) findViewById(R.id.set_date_button);
         setTimeButton = (Button) findViewById(R.id.set_time_button);
-
         Intent intent = getIntent();
+
+
         newTrip = intent.getStringExtra("com.example.carl2tre.journeyquest.newTrip");
         trip_id = intent.getLongExtra("com.example.carl2tre.journeyquest.trip_id", 0);
         db = new DBAdapter(this);
@@ -63,7 +64,17 @@ public class TransportationEvent extends Activity implements View.OnClickListene
         eventDate = (Button) findViewById(R.id.set_date_button);
         eventTime = (Button) findViewById(R.id.set_time_button);
         eventNotes = (EditText) findViewById(R.id.event_notes);
-        db.close();
+
+        Bundle bundle = intent.getExtras();
+        if(bundle != null){
+            eventName.setText(bundle.getString("event_name"));
+            //eventTransportation.set
+            eventNotes.setText(bundle.getString("notes"));
+
+        }
+
+
+
 
     }
     

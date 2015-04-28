@@ -94,25 +94,12 @@ public class TripList extends ListActivity {
 
         switch (item.getItemId()) {
             case R.id.item0:
-                Toast.makeText(this, "You clicked on " + text, Toast.LENGTH_LONG).show();
+                Intent tripIntent = new Intent(this, TripList.class);
+                startActivity(tripIntent);
                 return true;
             case R.id.item1:
-                Toast.makeText(this, "You clicked on " + text + ".\nDo Something.",
-                        Toast.LENGTH_LONG).show();
-                return true;
-            case R.id.item2:
-                Toast.makeText(this, "You clicked on " + text + ".\nDo Something.",
-                        Toast.LENGTH_LONG).show();
-                return true;
-            case R.id.item3:
-                Toast.makeText(this, "You clicked on " + text + ".\nDo Something.",
-                        Toast.LENGTH_LONG).show();
-                return true;
-            case R.id.item4:
-                Toast.makeText(this, "You clicked on " + text + ".\nDo Something.",
-                        Toast.LENGTH_LONG).show();
-                return true;
-            case R.id.action_settings:
+                Intent eventIntent = new Intent(this, EventList.class);
+                startActivity(eventIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

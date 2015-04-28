@@ -62,6 +62,13 @@ public class ReservationEvent extends Activity implements View.OnClickListener {
         eventDate = (Button) findViewById(R.id.set_date_button);
         eventTime = (Button) findViewById(R.id.event_time);
         eventNotes = (EditText) findViewById(R.id.event_notes);
+
+
+        Bundle bundle = intent.getExtras();
+        if(bundle != null){
+            eventName.setText(bundle.getString("event_name"));
+            eventNotes.setText(bundle.getString("notes"));
+        }
         db.close();
 
     }

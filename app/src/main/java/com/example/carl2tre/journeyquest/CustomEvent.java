@@ -55,7 +55,13 @@ import java.util.Calendar;
             eventDate = (Button) findViewById(R.id.set_date_button);
             eventTime = (Button) findViewById(R.id.event_time);
             eventNotes = (EditText) findViewById(R.id.event_notes);
-            db.close();
+
+            Bundle bundle = intent.getExtras();
+            if(bundle != null){
+                eventName.setText(bundle.getString("event_name"));
+                eventNotes.setText(bundle.getString("notes"));
+            }
+
 
         }
 
