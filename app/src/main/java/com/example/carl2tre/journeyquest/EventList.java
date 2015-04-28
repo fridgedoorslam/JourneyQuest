@@ -19,8 +19,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Collections;
 import java.util.List;
-
 
 public class EventList extends ListActivity {
     private DBAdapter db = new DBAdapter(this);
@@ -29,7 +29,6 @@ public class EventList extends ListActivity {
     public String event_name;
     public String newTrip;
     public long trip_id;
-    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +58,7 @@ public class EventList extends ListActivity {
         //trips = Trip.getAll(db);
         Log.d("EventList", "" + trip_id);
         events = Event.getAll(db, trip_id);
+        Collections.sort(events);
         db.close();
 
         ArrayAdapter<Event> adapter = new ArrayAdapter<Event>(this, android.R.layout.simple_list_item_checked, events);
@@ -77,7 +77,7 @@ public class EventList extends ListActivity {
                 final TextView eventTransportationType;
 
 
-                final long dbPosition = position + 1;
+                final long dbPosition = events.get(position).getId();
                 db.open();
                 //Cursor c = db.getEvent(dbPosition);
 
@@ -93,7 +93,7 @@ public class EventList extends ListActivity {
                 if(type.equals("Bus") || type.equals("Plane") || type.equals("Taxi") || type.equals("Car") || type.equals("Train") || type.equals("Walking")) {
 
                     nameBuild.setTitle("Event Name: " + event_name);
-                    nameBuild.setMessage("Transportation Type: " + transportation_type + "\n"
+                    nameBuild.setMessage("Event Type: Transportation \nTransportation Type: " + transportation_type + "\n"
                             + "Date: " + date + "\n"
                             + "Notes: " + notes + "\n");
                     nameBuild.setPositiveButton("Edit Event",
@@ -122,15 +122,13 @@ public class EventList extends ListActivity {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    //Delete event
+                                    db.open();
+                                    db.deleteEvent(dbPosition);
+                                    onResume();
+                                    db.close();
                                 }
 
                             });
-
-
-
-
-
                     nameBuild.show();
                 }
 
@@ -138,7 +136,7 @@ public class EventList extends ListActivity {
                 if(type.equals("Hotel") || type.equals("Restaurant") || type.equals("Tour") || type.equals("Other")) {
 
                     nameBuild.setTitle("Event Name: " + event_name);
-                    nameBuild.setMessage("Reservation Type: " + transportation_type + "\n"
+                    nameBuild.setMessage("Event Type: Reservation \nReservation Type: " + transportation_type + "\n"
                             + "Date: " + date + "\n"
                             + "Notes: " + notes + "\n");
                     nameBuild.setPositiveButton("Edit Event",
@@ -167,7 +165,11 @@ public class EventList extends ListActivity {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    //Delete event
+                                    db.open();
+                                    db.deleteEvent(dbPosition);
+                                    onResume();
+                                    db.close();
+
                                 }
 
                             });
@@ -176,7 +178,7 @@ public class EventList extends ListActivity {
 
                 // Dialog box for custom event
                 if(type.equals(" ")) {
-                    nameBuild.setTitle("Event Name: " + event_name);
+                    nameBuild.setTitle("Event Type: Custom \nEvent Name: " + event_name);
                     nameBuild.setMessage("Date: " + date + "\n" + "Notes: " + notes + "\n");
                     nameBuild.setPositiveButton("Edit Event",
                             new DialogInterface.OnClickListener() {
@@ -202,7 +204,10 @@ public class EventList extends ListActivity {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    //Delete event
+                                    db.open();
+                                    db.deleteEvent(dbPosition);
+                                    onResume();
+                                    db.close();
                                 }
 
                             });
@@ -250,7 +255,6 @@ public class EventList extends ListActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
     public void onAddEvent(View view){
 

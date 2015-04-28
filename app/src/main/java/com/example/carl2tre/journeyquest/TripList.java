@@ -54,17 +54,39 @@ public class TripList extends ListActivity {
                 //We need to map the position in the list to the position in the db
 
                 final long trip_id = trips.get(position).getId();
-//                trip_id = position;
+                final String trip_name = trips.get(position).getName();
 
-                db.open();
-                Cursor c = db.getTrip(trip_id);
+                AlertDialog.Builder nameBuild = new AlertDialog.Builder(TripList.this);
+                nameBuild.setTitle(trip_name);
+                nameBuild.setPositiveButton("View Events",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                db.open();
+                                Cursor c = db.getTrip(trip_id);
 
-                Intent intent = new Intent(TripList.this, EventList.class);
-                intent.putExtra("com.example.carl2tre.journeyquest.trip_id", trip_id);
-                intent.putExtra("com.example.carl2tre.journeyquest.newTrip", newTrip);
-                startActivity(intent);
+                                Intent intent = new Intent(TripList.this, EventList.class);
+                                intent.putExtra("com.example.carl2tre.journeyquest.trip_id", trip_id);
+                                intent.putExtra("com.example.carl2tre.journeyquest.newTrip", newTrip);
+                                startActivity(intent);
 
-                db.close();
+                                db.close();
+
+                            }
+                        });
+                nameBuild.setNegativeButton("Delete Trip",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                db.open();
+                                db.deleteTrip(trip_id);
+                                onResume();
+                                db.close();
+                            }
+                        });
+                nameBuild.show();
+
+
 
                     }
             });
@@ -113,14 +135,14 @@ public class TripList extends ListActivity {
         nameBuild.setTitle("Name your trip");
         tripName.setInputType(InputType.TYPE_CLASS_TEXT);
         nameBuild.setView(tripName);
-        nameBuild.setPositiveButton("Start Planning Trip",
+        nameBuild.setPositiveButton("Start Your Journey!",
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         db.open();
                         newTrip = tripName.getText().toString();
                         trip_id = db.insertTrip(newTrip);
-                        Toast.makeText(getApplicationContext(), newTrip + "added with id" + trip_id, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), newTrip + " added!", Toast.LENGTH_SHORT).show();
                         db.close();
                         onResume();
                         Intent intent = new Intent(getApplicationContext(), EventList.class);

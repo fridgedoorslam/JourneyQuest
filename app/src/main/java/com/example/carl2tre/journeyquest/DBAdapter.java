@@ -128,6 +128,12 @@ public class DBAdapter {
         return db.delete(DATABASE_TRIP_TABLE, KEY_TRIP_ID + "=" + rowId, null) > 0;
     }
 
+    //---deletes a particular event---
+    public boolean deleteEvent(long rowId)
+    {
+        return db.delete(DATABASE_EVENT_TABLE, KEY_EVENT_ID + "=" + rowId, null) > 0 ;
+    }
+
     //---retrieves all the trips---
     public Cursor getAllTrips()
     {
