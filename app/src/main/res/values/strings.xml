@@ -1,15 +1,22 @@
 <resources>
-    <string name="app_name">Trip Names</string>
+    <string name="app_name">Journey Quest</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_trip_options">Trip Events</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_splash_screen">SplashScreen</string>
+    <string name="title_activity_splash_screen">Journey Quest</string>
     <string name="title_activity_transportation_event">Transportation Event</string>
     <string name="title_activity_reservation_event">Reservation Event</string>
     <string name="title_activity_custom_event">Custom Event</string>
+    <string name="trip_dialog_name_title">Name Your Trip: </string>
+    <string name="trip_dialog_date">Start/End Date: </string>
+    <string name="trip_dialog_button_start_date">Choose Your Starting Date</string>
+    <string name="trip_dialog_button_end_date">Choose Your End Date</string>
+    <string name="trip_dialog_cancel"> Cancel </string>
+    <string name="trip_dialog_start"> Start Your Journey! </string>
     <string name="event_name">Event Name: </string>
     <string name="event_date"> Choose Date </string>
     <string name="event_time"> Choose Time </string>
+    <string name="event_locations_title">Choose Starting/Ending Point </string>
     <string name="transportation_type">Transportation Type: </string>
     <string name="reservation_type">Reservation Type: </string>
     <string name="date_time">Date/Time: </string>

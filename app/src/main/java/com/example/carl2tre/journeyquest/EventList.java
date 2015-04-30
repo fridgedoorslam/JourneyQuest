@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,9 +25,7 @@ import java.util.List;
 
 public class EventList extends ListActivity {
     private DBAdapter db = new DBAdapter(this);
-    public List<Trip> trips;
     public List<Event> events;
-    public String event_name;
     public String newTrip;
     public long trip_id;
 
@@ -34,6 +33,8 @@ public class EventList extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_list);
+
+        //Get necessary extras
         Intent intent = getIntent();
         newTrip = intent.getStringExtra("com.example.carl2tre.journeyquest.newTrip");
         trip_id = intent.getLongExtra("com.example.carl2tre.journeyquest.trip_id", 0);
@@ -52,15 +53,14 @@ public class EventList extends ListActivity {
     @Override
     public void onResume(){
         super.onResume();
-
         db = new DBAdapter(this);
         db.open();
-        //trips = Trip.getAll(db);
         Log.d("EventList", "" + trip_id);
         events = Event.getAll(db, trip_id);
         Collections.sort(events);
         db.close();
 
+        //Create ListView
         ArrayAdapter<Event> adapter = new ArrayAdapter<Event>(this, android.R.layout.simple_list_item_checked, events);
         setListAdapter(adapter);
         getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -74,9 +74,6 @@ public class EventList extends ListActivity {
                 //Rather, it corresponds to the position in the List<Contacts>
                 //We need to map the position in the list to the position in the db
 
-                final TextView eventTransportationType;
-
-
                 final long dbPosition = events.get(position).getId();
                 db.open();
                 //Cursor c = db.getEvent(dbPosition);
@@ -86,6 +83,9 @@ public class EventList extends ListActivity {
                 final String event_name = c.getString(c.getColumnIndex(db.KEY_EVENT_NAME));
                 final String transportation_type = c.getString(c.getColumnIndex(db.KEY_EVENT_TRANSPORTATION_TYPE));
                 final String date = c.getString(c.getColumnIndex(db.KEY_EVENT_DATE));
+                final String time = c.getString(c.getColumnIndex(db.KEY_EVENT_TIME));
+                final String startLocation = c.getString(c.getColumnIndex(db.KEY_EVENT_START_LOCATION));
+                final String endLocation = c.getString(c.getColumnIndex(db.KEY_EVENT_END_LOCATION));
                 final String notes = c.getString(c.getColumnIndex(db.KEY_EVENT_NOTES));
 
                 //Transportation dialog
@@ -95,6 +95,9 @@ public class EventList extends ListActivity {
                     nameBuild.setTitle("Event Name: " + event_name);
                     nameBuild.setMessage("Event Type: Transportation \nTransportation Type: " + transportation_type + "\n"
                             + "Date: " + date + "\n"
+                            + "Time: " + time + "\n"
+                            + "Start Location: " + startLocation + "\n"
+                            + "End Location: " + endLocation + "\n"
                             + "Notes: " + notes + "\n");
                     nameBuild.setPositiveButton("Edit Event",
                             new DialogInterface.OnClickListener() {
@@ -109,7 +112,7 @@ public class EventList extends ListActivity {
                                         Bundle bundle = new Bundle();
                                         bundle.putString("event_name", event_name);
                                         bundle.putString("transportation_type", transportation_type);
-                                        bundle.putString("date", date);
+                                        bundle.putString("event_date", date);
                                         bundle.putString("notes", notes);
                                         transportationIntent.putExtras(bundle);
                                         startActivity(transportationIntent);
@@ -138,6 +141,7 @@ public class EventList extends ListActivity {
                     nameBuild.setTitle("Event Name: " + event_name);
                     nameBuild.setMessage("Event Type: Reservation \nReservation Type: " + transportation_type + "\n"
                             + "Date: " + date + "\n"
+                            + "Time: " + time + "\n"
                             + "Notes: " + notes + "\n");
                     nameBuild.setPositiveButton("Edit Event",
                             new DialogInterface.OnClickListener() {
@@ -152,7 +156,7 @@ public class EventList extends ListActivity {
                                         Bundle bundle = new Bundle();
                                         bundle.putString("event_name", event_name);
                                         bundle.putString("transportation_type", transportation_type);
-                                        bundle.putString("date", date);
+                                        bundle.putString("event_date", date);
                                         bundle.putString("notes", notes);
                                         reservationIntent.putExtras(bundle);
                                         startActivity(reservationIntent);
@@ -179,7 +183,7 @@ public class EventList extends ListActivity {
                 // Dialog box for custom event
                 if(type.equals(" ")) {
                     nameBuild.setTitle("Event Type: Custom \nEvent Name: " + event_name);
-                    nameBuild.setMessage("Date: " + date + "\n" + "Notes: " + notes + "\n");
+                    nameBuild.setMessage("Date: " + date + "\n"  + "Time: " + time + "\n" + "Notes: " + notes + "\n");
                     nameBuild.setPositiveButton("Edit Event",
                             new DialogInterface.OnClickListener() {
                                 @Override
@@ -192,7 +196,7 @@ public class EventList extends ListActivity {
                                         Intent customIntent = new Intent(getApplicationContext(), CustomEvent.class);
                                         Bundle bundle = new Bundle();
                                         bundle.putString("event_name", event_name);
-                                        bundle.putString("date", date);
+                                        bundle.putString("event_date", date);
                                         bundle.putString("notes", notes);
                                         customIntent.putExtras(bundle);
                                         startActivity(customIntent);
@@ -256,9 +260,8 @@ public class EventList extends ListActivity {
         }
     }
 
+    //Launches specific activity on user selection
     public void onAddEvent(View view){
-
-
         String eventTypes[] ={"Transportation","Reservations","Custom"};
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(EventList.this);
         LayoutInflater inflater = getLayoutInflater();
@@ -295,6 +298,7 @@ public class EventList extends ListActivity {
         alertDialog.show();
     }
 
+    //Clears backstack
     @Override
     public void onBackPressed() {
         super.onBackPressed();

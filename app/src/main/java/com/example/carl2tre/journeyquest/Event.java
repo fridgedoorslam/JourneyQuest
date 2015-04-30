@@ -36,6 +36,7 @@ public class Event implements Comparable<Event> {
         return eventName;
     }
 
+    //returns list of events
     static public List<Event> getAll(DBAdapter db, long tripID){ //this is a class method
         List<Event> events = new ArrayList<Event>();
         Cursor c = db.getAllEventsSorted(tripID);
@@ -52,6 +53,7 @@ public class Event implements Comparable<Event> {
         return events;
     }
 
+    //returns event object
     static public Event cursorToContact( Cursor c, DBAdapter db){
         Event event = new Event();
         event.setId(c.getInt(c.getColumnIndex(db.KEY_EVENT_ID)));
@@ -113,6 +115,5 @@ public class Event implements Comparable<Event> {
 
 
     }
-
 
 }

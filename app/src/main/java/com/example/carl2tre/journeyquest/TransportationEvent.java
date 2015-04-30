@@ -29,23 +29,24 @@ public class TransportationEvent extends Activity implements View.OnClickListene
     public EditText eventNotes;
     public String event_name;
     public String event_transportation;
-    public String event_date;
-    public String event_time;
     public String event_notes;
-    public String date;
+    public String event_start_location;
+    public String event_end_location;
+    public String event_date; //was event_date
+    public String event_time;
     public long trip_id;
     public String newTrip;
     public Button setDateButton;
     public Button setTimeButton;
+    public EditText eventStartLocation;
+    public EditText eventEndLocation;
     DateFormat format = DateFormat.getDateInstance();
     Calendar calendar = Calendar.getInstance();
     public TimePickerDialog timePicker;
     public int mHour;
     public int mMinute;
 
-
-
-
+    //grab objects from layout
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transportation_event);
@@ -63,14 +64,38 @@ public class TransportationEvent extends Activity implements View.OnClickListene
         eventTransportation = (Spinner) findViewById(R.id.event_transportation);
         eventDate = (Button) findViewById(R.id.set_date_button);
         eventTime = (Button) findViewById(R.id.set_time_button);
+        eventStartLocation = (EditText) findViewById(R.id.start_location);
+        eventEndLocation = (EditText) findViewById(R.id.end_location);
         eventNotes = (EditText) findViewById(R.id.event_notes);
 
         Bundle bundle = intent.getExtras();
         if(bundle != null){
             eventName.setText(bundle.getString("event_name"));
-            //eventTransportation.set
+            String eventType = bundle.getString("transportation_type");
+            if(eventType != null) {
+                int position = 0;
+                if (eventType.equals("Bus")) {
+                    position = 0;
+                }
+                if (eventType.equals("Plane")) {
+                    position = 1;
+                }
+                if (eventType.equals("Taxi")) {
+                    position = 2;
+                }
+                if (eventType.equals("Car")) {
+                    position = 3;
+                }
+                if (eventType.equals("Train")) {
+                    position = 4;
+                }
+                if (eventType.equals("Walking")) {
+                    position = 5;
+                }
+                eventTransportation.setSelection(position);
+            }
             eventNotes.setText(bundle.getString("notes"));
-
+            bundle = null;
         }
 
 
@@ -85,7 +110,6 @@ public class TransportationEvent extends Activity implements View.OnClickListene
         newTrip = intent.getStringExtra("com.example.carl2tre.journeyquest.newTrip");
         trip_id = intent.getLongExtra("com.example.carl2tre.journeyquest.trip_id", 0);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -108,24 +132,31 @@ public class TransportationEvent extends Activity implements View.OnClickListene
 
         return super.onOptionsItemSelected(item);
     }
-    @Override
-    public void onBackPressed(){}
 
+    //on back press, solve world hunger
+    @Override
+    public void onBackPressed(){
+        //to do solve world hunger
+    }
+
+    //finish activity
     public void onCancel(View view){
         finish();
     }
 
+    //injects information into database
     public void onSubmit(View view) {
 
         event_name = eventName.getText().toString();
         event_transportation = eventTransportation.getSelectedItem().toString();
-//        event_date = eventDate.getText().toString();
 //        event_time = eventTime.getText().toString();
+        event_start_location = eventStartLocation.getText().toString();
+        event_end_location = eventEndLocation.getText().toString();
         event_notes = eventNotes.getText().toString();
 
         db = new DBAdapter(this);
         db.open();
-        long eventId = db.insertEvent(trip_id, event_name, event_transportation, date, event_notes);
+        long eventId = db.insertEvent(trip_id, event_name, event_transportation, event_date, event_time, event_start_location, event_end_location,  event_notes);
         db.close();
 
 
@@ -149,9 +180,7 @@ public class TransportationEvent extends Activity implements View.OnClickListene
             calendar.set(Calendar.MONTH, month);
             calendar.set(Calendar.DAY_OF_MONTH, day);
             Log.d("Date", "Date is " +"------------" + year + month + day);
-            date = format.format(calendar.getTime()).toString();
-
-
+            event_date = format.format(calendar.getTime()).toString();
         }
     };
 
@@ -163,10 +192,7 @@ public class TransportationEvent extends Activity implements View.OnClickListene
 
     }
 
-    public void onDateTapped(View view) {
-
-    }
-
+    //Allows user to input time
     public void onTimeTapped(View view) {
         final Calendar calendar = Calendar.getInstance();
         mHour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -175,7 +201,7 @@ public class TransportationEvent extends Activity implements View.OnClickListene
         timePicker = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute){
-                Toast.makeText(getApplicationContext(), "Time is " + mHour + ":" + mMinute,Toast.LENGTH_LONG).show();
+               event_time = mHour + ":" + mMinute;
 
             }
 

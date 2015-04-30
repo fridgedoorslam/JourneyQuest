@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.os.Handler;
 import android.view.Window;
 
-
+//splash screen for app start up
 public class SplashScreen extends Activity {
 
     @Override

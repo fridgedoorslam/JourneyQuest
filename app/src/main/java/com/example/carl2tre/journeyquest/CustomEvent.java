@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,13 +11,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TimePicker;
-import android.widget.Toast;
-
 import java.text.DateFormat;
 import java.util.Calendar;
-
 
     public class CustomEvent extends Activity implements View.OnClickListener {
         DBAdapter db;
@@ -26,8 +21,9 @@ import java.util.Calendar;
         public Button eventDate;
         public Button eventTime;
         public EditText eventNotes;
-        public String date;
+        public String event_date;
         public String event_name;
+        public String event_time;
         public String event_notes;
         public long trip_id;
         public String newTrip;
@@ -43,9 +39,9 @@ import java.util.Calendar;
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_custom_event);
 
+            //Grab objects from xml layout
             setDateButton = (Button) findViewById(R.id.set_date_button);
             setTimeButton = (Button) findViewById(R.id.event_time);
-
             Intent intent = getIntent();
             newTrip = intent.getStringExtra("com.example.carl2tre.journeyquest.newTrip");
             trip_id = intent.getLongExtra("com.example.carl2tre.journeyquest.trip_id", 0);
@@ -56,23 +52,22 @@ import java.util.Calendar;
             eventTime = (Button) findViewById(R.id.event_time);
             eventNotes = (EditText) findViewById(R.id.event_notes);
 
+            //Get bundle for editing event
             Bundle bundle = intent.getExtras();
             if(bundle != null){
                 eventName.setText(bundle.getString("event_name"));
                 eventNotes.setText(bundle.getString("notes"));
             }
-
-
         }
 
         @Override
         public void onResume() {
             super.onResume();
+            //grab trip name and id
             Intent intent = getIntent();
             newTrip = intent.getStringExtra("com.example.carl2tre.journeyquest.newTrip");
             trip_id = intent.getLongExtra("com.example.carl2tre.journeyquest.trip_id", 0);
         }
-
 
         @Override
         public boolean onCreateOptionsMenu(Menu menu) {
@@ -96,37 +91,36 @@ import java.util.Calendar;
             return super.onOptionsItemSelected(item);
         }
 
+        //if back button is tapped do nothing
         @Override
-        public void onBackPressed() {
-        }
+        public void onBackPressed() { }
 
+        //finishes activity if cancel is tapped
         public void onCancel(View view) {
             finish();
         }
 
+        //inject event fields into database
         public void onSubmit(View view) {
-
             event_name = eventName.getText().toString();
             event_notes = eventNotes.getText().toString();
-
             db = new DBAdapter(this);
             db.open();
-            long eventId = db.insertEvent(trip_id, event_name, " ", date, event_notes);
+            long eventId = db.insertEvent(trip_id, event_name, " ", event_date, event_time, " ", " ", event_notes);
             db.close();
-
-
             Intent intent = new Intent(CustomEvent.this, EventList.class);
             intent.putExtra("com.example.carl2tre.journeyquest.newTrip", newTrip);
             intent.putExtra("com.example.carl2tre.journeyquest.trip_id", trip_id);
             startActivity(intent);
         }
 
-
+        //Sets date
         public void setDate() {
             new DatePickerDialog(CustomEvent.this, d, calendar.get(Calendar.YEAR),
                     calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
         }
 
+        //Create date picker
         DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
 
             @Override
@@ -134,18 +128,17 @@ import java.util.Calendar;
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, day);
-                date = format.format(calendar.getTime()).toString();
-
+                event_date = format.format(calendar.getTime()).toString();
             }
         };
 
-
+        //Override onClick to set date
         @Override
         public void onClick(View arg0) {
             setDate();
-
         }
 
+        //Creates time picker dialog
         public void onTimeTapped(View view) {
             final Calendar calendar = Calendar.getInstance();
             mHour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -154,7 +147,7 @@ import java.util.Calendar;
             timePicker = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                    Toast.makeText(getApplicationContext(), "Time is " + mHour + ":" + mMinute, Toast.LENGTH_LONG).show();
+                    event_time = mHour + ":" + mMinute;
 
                 }
 

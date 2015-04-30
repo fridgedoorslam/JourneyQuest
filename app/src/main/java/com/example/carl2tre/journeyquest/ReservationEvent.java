@@ -18,7 +18,6 @@ import android.widget.Toast;
 import java.text.DateFormat;
 import java.util.Calendar;
 
-
 public class ReservationEvent extends Activity implements View.OnClickListener {
     DBAdapter db;
     public EditText eventName;
@@ -26,10 +25,9 @@ public class ReservationEvent extends Activity implements View.OnClickListener {
     public Button eventDate;
     public Button eventTime;
     public EditText eventNotes;
-    public String date;
+    public String event_date; //was event_date
     public String event_name;
     public String event_reservation;
-    public String event_date;
     public String event_time;
     public String event_notes;
     public long trip_id;
@@ -42,9 +40,7 @@ public class ReservationEvent extends Activity implements View.OnClickListener {
     public int mHour;
     public int mMinute;
 
-
-
-
+    //Initializes layout objects as well as finds bundled information if present
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reservation_event);
@@ -68,9 +64,25 @@ public class ReservationEvent extends Activity implements View.OnClickListener {
         if(bundle != null){
             eventName.setText(bundle.getString("event_name"));
             eventNotes.setText(bundle.getString("notes"));
+            String eventType = bundle.getString("transportation_type");
+            if(eventType != null) {
+                int position = 0;
+                if (eventType.equals("Hotel")) {
+                    position = 0;
+                }
+                if (eventType.equals("Restaurant")) {
+                    position = 1;
+                }
+                if (eventType.equals("Tour")) {
+                    position = 2;
+                }
+                if (eventType.equals("Other")) {
+                    position = 3;
+                }
+                eventReservation.setSelection(position);
+            }
         }
         db.close();
-
     }
 
     @Override
@@ -103,6 +115,7 @@ public class ReservationEvent extends Activity implements View.OnClickListener {
 
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public void onBackPressed(){}
 
@@ -110,17 +123,16 @@ public class ReservationEvent extends Activity implements View.OnClickListener {
         finish();
     }
 
+    //injects information into database
     public void onSubmit(View view) {
 
         event_name = eventName.getText().toString();
         event_reservation = eventReservation.getSelectedItem().toString();
-//        event_date = eventDate.getText().toString();
-//        event_time = eventTime.getText().toString();
         event_notes = eventNotes.getText().toString();
 
         db = new DBAdapter(this);
         db.open();
-        long eventId = db.insertEvent(trip_id, event_name, event_reservation, date, event_notes);
+        long eventId = db.insertEvent(trip_id, event_name, event_reservation, event_date, event_time, "", "", event_notes);
         db.close();
 
 
@@ -129,7 +141,6 @@ public class ReservationEvent extends Activity implements View.OnClickListener {
         intent.putExtra("com.example.carl2tre.journeyquest.trip_id", trip_id);
         startActivity(intent);
     }
-
 
     public void setDate() {
         new DatePickerDialog(ReservationEvent.this, d, calendar.get(Calendar.YEAR),
@@ -143,19 +154,17 @@ public class ReservationEvent extends Activity implements View.OnClickListener {
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.MONTH, month);
             calendar.set(Calendar.DAY_OF_MONTH, day);
-            date = format.format(calendar.getTime()).toString();
+            event_date = format.format(calendar.getTime()).toString();
 
         }
     };
 
-
-
     @Override
     public void onClick(View arg0) {
         setDate();
-
     }
 
+    //Brings up time dialog for user input
     public void onTimeTapped(View view) {
         final Calendar calendar = Calendar.getInstance();
         mHour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -164,7 +173,7 @@ public class ReservationEvent extends Activity implements View.OnClickListener {
         timePicker = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute){
-                Toast.makeText(getApplicationContext(), "Time is " + mHour + ":" + mMinute,Toast.LENGTH_LONG).show();
+            event_time = mHour + ":" + mMinute;
 
             }
 
