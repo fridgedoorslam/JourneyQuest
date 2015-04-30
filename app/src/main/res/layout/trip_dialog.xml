@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="20dp"
+    android:paddingTop="20dp"
+    android:paddingRight="20dp"
+    android:paddingBottom="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/trip_dialog_name_title"
+        android:id="@+id/textView5"
+        android:textSize="25sp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/trip_name"
+        android:layout_gravity="right"
+        android:singleLine="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/trip_dialog_date"
+        android:id="@+id/textView6"
+        android:textSize="25sp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/trip_dialog_button_start_date"
+        android:id="@+id/startDateButton"
+        android:ems="15"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/trip_dialog_button_end_date"
+        android:id="@+id/endDateButton"
+        android:ems="15"/>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trip_dialog_cancel"
+            android:id="@+id/cancel_trip_creation"
+            android:background="?android:attr/selectableItemBackground"
+            android:textColor="#ff6ebdb4" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trip_dialog_start"
+            android:id="@+id/start_journey"
+            android:layout_marginLeft="45dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:textColor="#ff6ebdb4" />
+    </TableRow>
+
+</LinearLayout>
