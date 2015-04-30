@@ -35,7 +35,7 @@ public class DBAdapter {
 
     static final String TAG = "DBAdapter";
     static final String DATABASE_NAME = "MyDB";
-    static final int DATABASE_VERSION = 18;
+    static final int DATABASE_VERSION = 20;
 
     static final String DATABASE_CREATE =
             "create table trips (tripID integer primary key autoincrement, "
@@ -44,7 +44,7 @@ public class DBAdapter {
     static final String DATABASE_EVENTS_CREATE =
             "create table events (eventID integer primary key autoincrement, "
             + "tripID long not null, eventName text not null, transportationType text not null, "
-            + "eventDate text not null, eventTime text, eventStartLocation text, eventEndLocation text, eventNotes text not null);";
+            + "eventDate text not null, eventTime text, eventStartLocation text, eventEndLocation text, eventNotes text);";
 
     final Context context;
 

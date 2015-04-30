@@ -132,6 +132,9 @@ public class ReservationEvent extends Activity implements View.OnClickListener {
 
         db = new DBAdapter(this);
         db.open();
+        if(event_date == null) {
+            Toast.makeText(this, "Date cannot be null. Event not created.", Toast.LENGTH_LONG).show();
+        }
         long eventId = db.insertEvent(trip_id, event_name, event_reservation, event_date, event_time, "", "", event_notes);
         db.close();
 
